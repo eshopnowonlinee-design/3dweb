@@ -1,0 +1,1627 @@
+<!--
+==========================================================================
+ 3D SITE VAULT — Black Cherry sales page (Elementor, one HTML widget)
+==========================================================================
+ HOW TO INSTALL
+ 1. Pages → Add New → Edit with Elementor.
+ 2. Page Settings (gear icon) → Page Layout: "Elementor Canvas".
+ 3. Add ONE Container → Content Width: Full Width · Padding 0 · Gap 0.
+    No Motion Effects on this container (they break the sticky header).
+ 4. Drag ONE "HTML" widget into it → paste this ENTIRE file → Update.
+ 5. Scroll to "EDIT THIS" near the bottom and fill in:
+      checkout  → replace PRODUCT_ID with your WooCommerce product ID
+      deadline  → the REAL date the ₹299 launch price ends
+      media     → URLs of your AI images / video (upload to Media Library,
+                  copy "File URL"). Leave '' to keep the built-in design.
+      gallery   → screenshots / live links of sites you built with the kit
+      reviews   → REAL buyer reviews only (empty = honest launch-week card)
+      buyers    → REAL orders only (empty = no purchase pop-ups)
+ 6. Check the LIVE page on your phone.
+
+ Honest-by-design: the countdown ends on your real deadline and then the
+ page shows ₹499 automatically; pop-ups and reviews only show real data.
+ Loads Google Fonts (Unbounded + Plus Jakarta Sans) and three.js 0.160.0
+ from jsDelivr for the 3D vault. No plugins. If 3D cannot run, the coded
+ website stack shows instead.
+ All classes start with "cv-".
+==========================================================================
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+/* ---------- TOKENS + SCOPED RESET ---------- */
+.cv{--bg:#1A0A0F;--bg2:#210D14;--panel:#2E1119;--panel2:#3A1621;--line:rgba(243,217,207,.1);--line2:rgba(243,217,207,.18);
+  --rose:#F3D9CF;--txt:#FBEFEA;--muted:rgba(243,217,207,.66);--gold:#E2B04A;--gold-hi:#F5D27A;--gold-lo:#B5862C;--cherry:#E0436B;
+  --grad:linear-gradient(135deg,#F7DC8E 0%,#E2B04A 45%,#B5862C 100%);
+  --hd:"Unbounded","Arial Black",system-ui,sans-serif;--bd:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r:22px;
+  font-family:var(--bd);color:var(--txt);background:var(--bg);font-size:16px;line-height:1.6;width:100%;overflow-x:clip;position:relative;-webkit-font-smoothing:antialiased}
+.cv *,.cv *::before,.cv *::after{box-sizing:border-box;margin:0;padding:0}
+.cv img,.cv video{max-width:100%;display:block}
+.cv a{color:inherit;text-decoration:none}
+.cv button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+.cv h1,.cv h2,.cv h3{font-family:var(--hd);font-weight:700;letter-spacing:-.02em;line-height:1.08;color:var(--txt);text-transform:none}
+.cv p{color:var(--muted)}
+.cv :focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:8px}
+.cv [hidden]{display:none!important}
+.cv-wrap{width:100%;max-width:1180px;margin:0 auto;padding:0 20px}
+.cv-sec{padding:100px 0;position:relative}
+.cv-eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:99px;border:1px solid var(--line2);background:rgba(243,217,207,.04);
+  font-size:12px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:var(--gold-hi)}
+.cv-eyebrow i{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--gold)}
+.cv-h2{font-size:clamp(30px,4.4vw,56px);margin:18px 0 16px}
+.cv-g{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.cv-lead{font-size:clamp(16px,1.5vw,18px);max-width:640px}
+.cv-center{text-align:center}.cv-center .cv-lead{margin:0 auto}
+.cv-grain{position:fixed;inset:0;z-index:90;pointer-events:none;opacity:.07;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* ---------- BUTTONS ---------- */
+.cv .cv-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:58px;padding:0 30px;border-radius:16px;
+  font-weight:800;font-size:16.5px;letter-spacing:.1px;white-space:nowrap;overflow:hidden;isolation:isolate;transition:transform .25s,box-shadow .25s}
+.cv .cv-btn-p{background:var(--grad);color:#1A0A0F;box-shadow:0 14px 34px -10px rgba(226,176,74,.6),inset 0 1px 0 rgba(255,255,255,.55)}
+.cv .cv-btn-p::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.55) 50%,transparent 70%);transform:translateX(-120%);animation:cvShine 3.8s 1.5s ease-in-out infinite}
+@keyframes cvShine{0%,60%{transform:translateX(-120%)}85%,100%{transform:translateX(120%)}}
+.cv .cv-btn-p:hover{transform:translateY(-2px);box-shadow:0 20px 44px -10px rgba(226,176,74,.8)}
+.cv .cv-btn-g{border:1px solid var(--line2);background:rgba(243,217,207,.04);color:var(--txt)}
+.cv .cv-btn-g:hover{border-color:var(--gold);transform:translateY(-2px)}
+.cv .cv-btn svg{width:18px;height:18px}
+.cv-strike{text-decoration:line-through;opacity:.55;font-weight:600}
+
+/* ---------- HEADER: countdown bar + nav ---------- */
+.cv-head{position:sticky;top:0;z-index:60}
+.cv-bar{display:flex;align-items:center;justify-content:center;gap:10px 16px;flex-wrap:wrap;padding:9px 16px;font-size:13.5px;font-weight:600;color:#1A0A0F;
+  background:linear-gradient(90deg,#B5862C,#F5D27A,#E2B04A,#F5D27A,#B5862C);background-size:200% 100%;animation:cvBar 8s linear infinite;text-align:center}
+@keyframes cvBar{to{background-position:200% 0}}
+.cv-bar b{font-weight:800}
+.cv-cd{display:inline-flex;gap:4px;font-variant-numeric:tabular-nums;font-weight:800}
+.cv-cd span{background:#1A0A0F;color:var(--gold-hi);border-radius:6px;padding:2px 6px;min-width:30px;text-align:center;font-size:13px}
+.cv-nav{backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);background:rgba(26,10,15,.78);border-bottom:1px solid var(--line)}
+.cv-nav .cv-wrap{display:flex;align-items:center;justify-content:space-between;height:66px}
+.cv-logo{font-family:var(--hd);font-weight:800;font-size:17px;letter-spacing:.5px;display:flex;align-items:center;gap:10px}
+.cv-logo i{width:30px;height:30px;border-radius:9px;background:var(--grad);display:grid;place-items:center;color:#1A0A0F}
+.cv-logo i svg{width:16px;height:16px}
+.cv-logo b{color:var(--gold-hi);font-weight:800}
+.cv-nav nav{display:flex;gap:28px;font-size:14.5px;font-weight:600;color:var(--muted)}
+.cv-nav nav a:hover{color:var(--txt)}
+.cv-nav .cv-btn{min-height:44px;padding:0 18px;font-size:14px;border-radius:12px}
+
+/* ---------- HERO ---------- */
+.cv-hero{position:relative;padding:70px 0 90px;overflow:hidden;
+  background:radial-gradient(60vw 40vw at 75% 20%,rgba(224,67,107,.18),transparent 60%),radial-gradient(50vw 40vw at 10% 80%,rgba(226,176,74,.12),transparent 60%),var(--cv-texture,none) center/cover no-repeat,var(--bg)}
+.cv-hero .cv-wrap{display:grid;grid-template-columns:1.05fr 1fr;gap:48px;align-items:center;position:relative;z-index:2}
+.cv-h1{font-size:clamp(36px,5vw,66px);margin:22px 0 20px;line-height:1.04}
+.cv-hero-sub{font-size:clamp(16px,1.6vw,19px);max-width:540px}
+.cv-hero-sub strong{color:var(--txt)}
+.cv-ctas{display:flex;flex-wrap:wrap;align-items:center;gap:14px 22px;margin:32px 0 22px}
+.cv-pricetag{display:flex;flex-direction:column;line-height:1.2}
+.cv-pricetag b{font-family:var(--hd);font-size:26px;color:var(--txt)}
+.cv-pricetag small{font-size:12.5px;color:var(--muted)}
+.cv-ticks{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13.5px;color:var(--muted)}
+.cv-ticks span{display:inline-flex;align-items:center;gap:7px}
+.cv-ticks svg{width:16px;height:16px;color:var(--gold)}
+.cv-in{animation:cvUp .9s cubic-bezier(.2,.8,.2,1) both}
+.cv-in2{animation-delay:.1s}.cv-in3{animation-delay:.2s}.cv-in4{animation-delay:.3s}.cv-in5{animation-delay:.42s}
+@keyframes cvUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+
+/* hero visual: video slot or coded 3D composition */
+.cv-visual{position:relative;aspect-ratio:1/0.92;perspective:1400px}
+.cv-video{position:absolute;inset:4% 0;border-radius:26px;overflow:hidden;border:1px solid rgba(226,176,74,.35);box-shadow:0 50px 100px -30px rgba(0,0,0,.8),0 0 80px -30px rgba(226,176,74,.45)}
+.cv-video video{width:100%;height:100%;object-fit:cover}
+.cv-stage{position:absolute;inset:0;transform-style:preserve-3d;--rx:8deg;--ry:-16deg;transform:rotateX(var(--rx)) rotateY(var(--ry));will-change:transform}
+.cv-site{position:absolute;width:72%;border-radius:16px;overflow:hidden;background:#12070B;border:1px solid var(--line2);box-shadow:0 40px 80px -24px rgba(0,0,0,.85)}
+.cv-site.s1{left:16%;top:36%;transform:translateZ(70px)}
+.cv-site.s2{left:0;top:14%;transform:translateZ(-40px);filter:brightness(.75)}
+.cv-site.s3{left:30%;top:0;transform:translateZ(-140px);filter:brightness(.55)}
+.cv-sbar{display:flex;align-items:center;gap:6px;height:26px;padding:0 12px;background:#24101A;border-bottom:1px solid var(--line)}
+.cv-sbar i{width:8px;height:8px;border-radius:50%;background:#FF5F57}.cv-sbar i:nth-child(2){background:#FEBC2E}.cv-sbar i:nth-child(3){background:#28C840}
+.cv-sbar span{margin-left:10px;font-size:10px;color:#8a6f78;background:#12070B;border-radius:6px;padding:2px 10px;max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cv-sbody{display:grid;grid-template-columns:1.15fr 1fr;align-items:center;gap:8px;padding:22px 18px;min-height:170px;
+  background:radial-gradient(110% 120% at 100% 0%,color-mix(in srgb,var(--c1) 26%,transparent),transparent 58%),#12070B}
+.cv-sbody b{display:block;font-family:var(--hd);font-size:clamp(14px,1.6vw,20px);line-height:1.05;color:#fff;margin-bottom:10px}
+.cv-sbody em{display:block;height:6px;border-radius:4px;background:rgba(255,255,255,.14);margin-bottom:6px;width:88%}
+.cv-sbody em+em{width:60%}
+.cv-sbody u{display:inline-block;text-decoration:none;margin-top:8px;font-size:10px;font-weight:800;padding:6px 12px;border-radius:7px;background:var(--c1);color:#12070B}
+.cv-orb{justify-self:center;width:clamp(64px,8vw,110px);aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle at 32% 28%,#fff 0,var(--c1) 22%,var(--c2) 64%,#050203 100%);box-shadow:0 0 46px -6px var(--c1),inset -10px -14px 24px rgba(0,0,0,.55);animation:cvFloat 6s ease-in-out infinite}
+@keyframes cvFloat{0%,100%{translate:0 0}50%{translate:0 -8px}}
+.cv-ring{position:absolute;right:0;bottom:6%;width:30%;aspect-ratio:1;border-radius:50%;transform:translateZ(150px) rotateX(68deg);
+  border:9px solid transparent;background:conic-gradient(#F7DC8E,#B5862C,#F5D27A,#7d5a18,#F7DC8E) border-box;
+  -webkit-mask:linear-gradient(#000 0 0) padding-box exclude,linear-gradient(#000 0 0);mask:linear-gradient(#000 0 0) padding-box exclude,linear-gradient(#000 0 0);
+  filter:drop-shadow(0 0 16px rgba(226,176,74,.55));animation:cvSpin 14s linear infinite}
+@keyframes cvSpin{to{transform:translateZ(150px) rotateX(68deg) rotateZ(360deg)}}
+.cv-chip{position:absolute;padding:8px 13px;border-radius:12px;font-size:12px;font-weight:800;background:rgba(46,17,25,.92);border:1px solid var(--line2);box-shadow:0 18px 30px -10px rgba(0,0,0,.7);white-space:nowrap}
+.cv-chip b{color:var(--gold-hi)}
+.cv-chip.c1{left:-2%;top:18%;transform:translateZ(180px)}
+.cv-chip.c2{right:0;top:4%;transform:translateZ(120px)}
+.cv-chip.c3{left:28%;bottom:0;transform:translateZ(200px)}
+
+/* tools strip */
+.cv-tools{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg2);padding:20px 0}
+.cv-tools .cv-wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px 34px}
+.cv-tools small{font-size:12px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted)}
+.cv-tools span{font-family:var(--hd);font-weight:600;font-size:15px;color:rgba(243,217,207,.5)}
+
+/* ---------- GALLERY ---------- */
+.cv-gal{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:48px}
+.cv-gcard{position:relative;border-radius:var(--r);overflow:hidden;background:var(--panel);border:1px solid var(--line);transition:transform .3s ease,border-color .3s;transform-style:preserve-3d}
+.cv-gcard:hover{border-color:rgba(226,176,74,.45)}
+.cv-gshot{aspect-ratio:16/10;overflow:hidden;position:relative;background:#12070B}
+.cv-gshot img{width:100%;height:100%;object-fit:cover;object-position:center}
+.cv-app-stage.has-video{background:#0d0507}
+.cv-app-stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.cv-mock img{border-radius:16px;border:1px solid rgba(226,176,74,.35)}
+/* hero with the vault video as a full background */
+.cv-hero-bg{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.cv-hero-bg video{width:100%;height:100%;object-fit:cover;object-position:70% center}
+.cv-hero-bg::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(90deg,rgba(26,10,15,.94) 0%,rgba(26,10,15,.82) 32%,rgba(26,10,15,.35) 58%,rgba(26,10,15,.08) 80%),
+             linear-gradient(0deg,var(--bg) 0%,rgba(26,10,15,0) 22%),linear-gradient(180deg,rgba(26,10,15,.6) 0%,rgba(26,10,15,0) 18%)}
+.cv-hero--video{min-height:calc(100vh - 100px);display:flex;align-items:center;padding:80px 0 110px}
+.cv-hero--video .cv-wrap{grid-template-columns:1fr}
+.cv-hero--video .cv-wrap>div:first-child{max-width:620px}
+.cv-hero--video .cv-h1{text-shadow:0 4px 30px rgba(0,0,0,.5)}
+.cv-gshot .cv-site{position:static;width:100%;border:0;border-radius:0;box-shadow:none;height:100%}
+.cv-gshot .cv-sbody{min-height:0;height:calc(100% - 26px)}
+.cv-gmeta{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 18px}
+.cv-gmeta b{display:block;font-size:15.5px;font-weight:700;color:var(--txt)}
+.cv-gmeta small{font-size:12.5px;color:var(--muted)}
+.cv-gmeta a{flex:none;font-size:12.5px;font-weight:700;color:var(--gold-hi);padding:7px 12px;border-radius:9px;border:1px solid rgba(226,176,74,.35)}
+.cv-gmeta a:hover{background:rgba(226,176,74,.12)}
+.cv-gnote{margin-top:18px;font-size:12.5px;color:var(--muted);text-align:center}
+
+/* ---------- BONUS: APP UI PROMPTS ---------- */
+.cv-apps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:48px}
+.cv-app{border-radius:var(--r);background:var(--panel);border:1px solid var(--line);overflow:hidden}
+.cv-app:hover{border-color:rgba(226,176,74,.45)}
+.cv-app-stage{position:relative;height:300px;perspective:900px;overflow:hidden;
+  background:radial-gradient(70% 60% at 50% 45%,color-mix(in srgb,var(--a) 34%,transparent),transparent 70%),#170810}
+.cv-ph{position:absolute;top:36px;left:50%;width:112px;height:232px;margin-left:-56px;border-radius:20px;background:#fff;border:4px solid #0d0507;
+  box-shadow:0 30px 50px -18px rgba(0,0,0,.85);overflow:hidden;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.cv-ph::before{content:"";position:absolute;top:4px;left:50%;width:30px;height:7px;margin-left:-15px;border-radius:6px;background:#0d0507;z-index:3}
+.cv-ph.l{transform:translateX(-66px) translateZ(-60px) rotateY(26deg) rotateZ(-5deg)}
+.cv-ph.r{transform:translateX(66px) translateZ(-60px) rotateY(-26deg) rotateZ(5deg)}
+.cv-ph.c{transform:translateZ(20px);animation:cvFloat 5s ease-in-out infinite;z-index:2}
+.cv-app:hover .cv-ph.l{transform:translateX(-86px) translateZ(-40px) rotateY(18deg) rotateZ(-9deg)}
+.cv-app:hover .cv-ph.r{transform:translateX(86px) translateZ(-40px) rotateY(-18deg) rotateZ(9deg)}
+.cv-app-meta{padding:16px 18px 18px}
+.cv-app-meta small{display:block;font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--gold-hi);margin-bottom:4px}
+.cv-app-meta b{display:block;font-size:16px;font-weight:700;color:var(--txt)}
+.cv-app-meta p{font-size:13px;margin-top:4px}
+/* tiny UI kit inside the phones */
+.u{position:absolute;inset:0;padding:16px 8px 8px;display:flex;flex-direction:column;gap:5px;font-family:var(--bd);font-size:6.5px;line-height:1.3;color:#1b1b1f;text-align:left}
+.u-h{font-weight:800;font-size:9px;line-height:1.15}
+.u-s{font-size:5.5px;opacity:.6}
+.u-l{height:3.5px;border-radius:3px;background:rgba(0,0,0,.09)}
+.u-btn{margin-top:auto;height:17px;border-radius:9px;background:var(--a);color:#fff;font-size:6px;font-weight:800;display:grid;place-items:center}
+.u-card{border-radius:8px;background:rgba(0,0,0,.045);padding:5px}
+.u-row{display:flex;gap:4px}
+.u-row>*{flex:1}
+.u-chip{flex:none!important;padding:2px 5px;border-radius:6px;background:rgba(0,0,0,.06);font-size:5.5px;font-weight:700}
+.u-chip.on{background:var(--a);color:#fff}
+.u-ring{width:64px;height:64px;border-radius:50%;margin:3px auto;background:conic-gradient(var(--a) 0 68%,rgba(0,0,0,.08) 0);display:grid;place-items:center;position:relative}
+.u-ring::before{content:"";position:absolute;inset:6px;border-radius:50%;background:#fff}
+.u-ring b{position:relative;font-size:9.5px;text-align:center;line-height:1}
+.u-ring b small{display:block;font-size:5px;opacity:.55;font-weight:600}
+.u-img{border-radius:9px;flex:none;position:relative;overflow:hidden}
+.u-tab{margin-top:auto;display:flex;justify-content:space-around;padding-top:5px;border-top:1px solid rgba(0,0,0,.06)}
+.u-tab i{width:7px;height:7px;border-radius:2px;background:rgba(0,0,0,.18)}
+.u-tab i.on{background:var(--a)}
+.u-splash{align-items:center;justify-content:center;gap:3px;color:#fff;text-align:center}
+.u-logo{font-family:var(--hd);font-weight:800;font-size:13px;letter-spacing:-.02em}
+.u-dot{width:6px;height:6px;border-radius:50%;background:var(--a);flex:none}
+.u-bub{max-width:76%;padding:4px 6px;border-radius:8px;background:rgba(0,0,0,.06);font-size:5.5px}
+.u-bub.me{align-self:flex-end;background:var(--a);color:#fff}
+
+/* ---------- PAIN ---------- */
+.cv-pain{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:46px}
+.cv-pcard{padding:28px;border-radius:var(--r);background:linear-gradient(180deg,rgba(224,67,107,.08),transparent 60%),var(--panel);border:1px solid var(--line)}
+.cv-pcard .n{font-family:var(--hd);font-size:34px;color:rgba(224,67,107,.55);margin-bottom:14px;display:block}
+.cv-pcard h3{font-size:18px;margin-bottom:10px;line-height:1.3}
+.cv-pcard p{font-size:14.5px}
+.cv-shift{margin:40px auto 0;max-width:760px;text-align:center;font-family:var(--hd);font-size:clamp(18px,2.2vw,26px);line-height:1.35;color:var(--txt)}
+
+/* ---------- BEFORE / AFTER ---------- */
+.cv-ba{position:relative;margin:48px auto 0;max-width:980px;aspect-ratio:16/9;border-radius:24px;overflow:hidden;border:1px solid var(--line2);box-shadow:0 50px 100px -40px rgba(0,0,0,.8);user-select:none;--pos:50%}
+.cv-ba-l{position:absolute;inset:0}
+.cv-ba-after{clip-path:inset(0 0 0 var(--pos))}
+.cv-ba-tag{position:absolute;bottom:14px;padding:6px 12px;border-radius:9px;font-size:12px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;z-index:3}
+.cv-ba-before .cv-ba-tag{left:14px;background:#e9e9ee;color:#555}
+.cv-ba-after .cv-ba-tag{right:14px;background:var(--grad);color:#1A0A0F}
+.cv-ba-handle{position:absolute;top:0;bottom:0;left:var(--pos);width:2px;background:var(--gold);z-index:4;pointer-events:none;box-shadow:0 0 14px rgba(226,176,74,.8)}
+.cv-ba-handle::after{content:"⇆";position:absolute;top:50%;left:50%;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:var(--grad);color:#1A0A0F;display:grid;place-items:center;font-weight:800;font-size:18px;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.cv-ba input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;z-index:5;margin:0}
+/* generic "before" mock */
+.cv-mb{background:#f4f4f6;height:100%;font-family:Georgia,"Times New Roman",serif;color:#333;display:flex;flex-direction:column}
+.cv-mb-nav{display:flex;justify-content:space-between;align-items:center;padding:3% 4%;background:#2b5ea7;color:#fff;font-family:Arial,sans-serif;font-size:clamp(9px,1.2vw,14px)}
+.cv-mb-hero{display:grid;grid-template-columns:1fr 1fr;gap:4%;padding:5% 4%;align-items:center;flex:1}
+.cv-mb-hero h4{font-size:clamp(14px,2.4vw,30px);font-weight:400;margin-bottom:3%}
+.cv-mb-hero p{color:#777;font-size:clamp(9px,1.1vw,13px);font-family:Arial,sans-serif;line-height:1.5}
+.cv-mb-hero button{margin-top:5%;background:#2b5ea7;color:#fff;font-family:Arial,sans-serif;padding:2.5% 5%;font-size:clamp(9px,1.1vw,13px);border-radius:3px}
+.cv-mb-img{aspect-ratio:4/3;background:repeating-linear-gradient(45deg,#d9d9de 0 10px,#cfcfd6 10px 20px);display:grid;place-items:center;color:#999;font-family:Arial,sans-serif;font-size:clamp(9px,1.1vw,13px)}
+/* premium "after" mock */
+.cv-ma{height:100%;background:radial-gradient(70% 90% at 80% 30%,rgba(226,176,74,.28),transparent 60%),radial-gradient(60% 80% at 10% 100%,rgba(224,67,107,.22),transparent 60%),#12070B;display:flex;flex-direction:column}
+.cv-ma-nav{display:flex;justify-content:space-between;align-items:center;padding:3% 4%;font-family:var(--hd);font-size:clamp(9px,1.2vw,14px);color:#fff}
+.cv-ma-nav span{font-family:var(--bd);color:rgba(255,255,255,.55);font-size:clamp(8px,1vw,12px);display:flex;gap:16px}
+.cv-ma-hero{display:grid;grid-template-columns:1.1fr 1fr;align-items:center;padding:3% 4% 5%;flex:1}
+.cv-ma-hero h4{font-family:var(--hd);font-size:clamp(16px,3.2vw,40px);line-height:1;color:#fff;margin-bottom:4%}
+.cv-ma-hero h4 i{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.cv-ma-hero p{color:rgba(255,255,255,.6);font-size:clamp(8px,1.1vw,13px);line-height:1.5}
+.cv-ma-hero b{display:inline-block;margin-top:6%;padding:2.6% 6%;border-radius:99px;background:var(--grad);color:#1A0A0F;font-size:clamp(8px,1.1vw,13px)}
+.cv-ma-3d{justify-self:center;width:70%;aspect-ratio:1;border-radius:50%;position:relative;
+  background:radial-gradient(circle at 32% 28%,#fff 0,#F5D27A 18%,#B5862C 55%,#2a1404 100%);box-shadow:0 0 60px -6px rgba(226,176,74,.8),inset -14px -18px 30px rgba(0,0,0,.5)}
+.cv-ma-3d::after{content:"";position:absolute;inset:-14%;border-radius:50%;border:2px solid rgba(245,210,122,.5);transform:rotateX(70deg)}
+.cv-ba-note{margin-top:14px;font-size:12.5px;color:var(--muted);text-align:center}
+.cv-ba-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;pointer-events:none;user-select:none;-webkit-user-drag:none}
+.cv .cv-ba.has-img{aspect-ratio:16/9}
+
+/* ---------- FREE SAMPLE PROMPT ---------- */
+.cv-sample{display:grid;grid-template-columns:.85fr 1.15fr;gap:40px;align-items:start;margin-top:10px}
+.cv-code{position:relative;border-radius:var(--r);background:#12070B;border:1px solid rgba(226,176,74,.3);overflow:hidden;box-shadow:0 40px 90px -40px rgba(0,0,0,.9)}
+.cv-code-top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;background:#24101A;border-bottom:1px solid var(--line)}
+.cv-code-top span{font-size:12.5px;font-weight:700;color:var(--gold-hi);letter-spacing:.5px}
+.cv .cv-copy{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:10px;background:var(--grad);color:#1A0A0F;font-size:13px;font-weight:800}
+.cv-code pre{margin:0;padding:20px 20px 24px;max-height:380px;overflow:auto;white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.7;color:#ecd9d2}
+.cv-code pre .k{color:var(--gold-hi)}
+.cv-steps3{list-style:none;display:grid;gap:14px;margin-top:26px}
+.cv-steps3 li{display:flex;gap:14px;align-items:flex-start;font-size:15px;color:var(--muted)}
+.cv-steps3 li b{flex:none;width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:rgba(226,176,74,.12);color:var(--gold-hi);font-family:var(--hd);font-size:13px}
+.cv-steps3 li strong{color:var(--txt)}
+
+/* ---------- INSIDE (bento) ---------- */
+.cv-bento{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:minmax(150px,auto);gap:16px;margin-top:48px}
+.cv-tile{position:relative;border-radius:var(--r);padding:24px;background:var(--panel);border:1px solid var(--line);overflow:hidden;transition:border-color .3s,transform .3s}
+.cv-tile:hover{border-color:rgba(226,176,74,.4)}
+.cv-tile::before{content:"";position:absolute;inset:0;background:radial-gradient(240px circle at var(--mx,50%) var(--my,0%),rgba(226,176,74,.13),transparent 60%);opacity:0;transition:opacity .3s;pointer-events:none}
+.cv-tile:hover::before{opacity:1}
+.cv-tile .ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:rgba(226,176,74,.12);color:var(--gold-hi);margin-bottom:16px}
+.cv-tile .ic svg{width:22px;height:22px}
+.cv-tile h3{font-size:17px;margin-bottom:8px;line-height:1.3}
+.cv-tile p{font-size:14px;line-height:1.55}
+.cv-tile.hero-t{grid-column:span 2;grid-row:span 2;display:flex;flex-direction:column;justify-content:flex-end;min-height:420px;padding-top:min(300px,62%);
+  background:radial-gradient(80% 70% at 50% 30%,rgba(226,176,74,.2),transparent 65%),linear-gradient(180deg,var(--panel2),var(--panel))}
+.cv-tile.hero-t h3{font-size:24px}
+.cv-tile.wide{grid-column:span 2}
+.cv-mock{position:absolute;left:50%;top:24px;transform:translateX(-50%);width:min(250px,56%);perspective:900px}
+.cv-mock img{width:100%;filter:drop-shadow(0 40px 50px rgba(0,0,0,.6))}
+.cv-book{position:relative;width:62%;margin:0 auto;aspect-ratio:3/4;transform:rotateY(-24deg) rotateX(6deg);transform-style:preserve-3d;animation:cvBook 7s ease-in-out infinite}
+@keyframes cvBook{0%,100%{transform:rotateY(-24deg) rotateX(6deg)}50%{transform:rotateY(-14deg) rotateX(3deg) translateY(-8px)}}
+.cv-book .f{position:absolute;inset:0;border-radius:6px 14px 14px 6px;padding:14% 12%;display:flex;flex-direction:column;justify-content:space-between;
+  background:radial-gradient(90% 60% at 70% 20%,rgba(224,67,107,.35),transparent 60%),linear-gradient(160deg,#4a1a28,#1e0910);border:1px solid rgba(226,176,74,.45);
+  box-shadow:inset 6px 0 10px rgba(0,0,0,.45),0 40px 60px -20px rgba(0,0,0,.8)}
+.cv-book .f small{font-size:9px;font-weight:800;letter-spacing:2px;color:var(--gold-hi)}
+.cv-book .f strong{font-family:var(--hd);font-size:clamp(16px,2vw,24px);line-height:1;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.cv-book .f span{font-size:9px;color:var(--rose);opacity:.8}
+.cv-book .sp{position:absolute;top:2%;bottom:2%;right:-12px;width:14px;background:repeating-linear-gradient(180deg,#f3e7d8 0 2px,#d9c8b4 2px 3px);transform:rotateY(90deg) translateZ(-1px);transform-origin:left;border-radius:0 3px 3px 0}
+
+/* ---------- MATHS ---------- */
+.cv-math{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:stretch;gap:14px;margin-top:46px}
+.cv-mcard{padding:30px 24px;border-radius:var(--r);background:var(--panel);border:1px solid var(--line);text-align:center}
+.cv-mcard b{display:block;font-family:var(--hd);font-size:clamp(28px,3.4vw,42px);margin-bottom:10px}
+.cv-mcard p{font-size:14.5px}
+.cv-mcard.hl{background:linear-gradient(180deg,rgba(226,176,74,.14),transparent 70%),var(--panel);border-color:rgba(226,176,74,.4)}
+.cv-op{display:grid;place-items:center;font-family:var(--hd);font-size:28px;color:var(--gold)}
+.cv-foot-note{margin-top:16px;font-size:12.5px;color:var(--muted);text-align:center}
+
+/* ---------- WHO ---------- */
+.cv-who{display:grid;grid-template-columns:1.3fr 1fr;gap:18px;margin-top:46px}
+.cv-wcard{padding:30px;border-radius:var(--r);background:var(--panel);border:1px solid var(--line)}
+.cv-wcard h3{font-size:20px;margin-bottom:18px}
+.cv-wcard ul{list-style:none;display:grid;gap:13px}
+.cv-wcard li{display:flex;gap:12px;font-size:15px;color:var(--rose)}
+.cv-wcard li svg{flex:none;width:20px;height:20px;margin-top:2px}
+.cv-wcard.yes{border-color:rgba(226,176,74,.35);background:linear-gradient(180deg,rgba(226,176,74,.08),transparent 60%),var(--panel)}
+.cv-wcard.yes svg{color:var(--gold)}
+.cv-wcard.no svg{color:var(--cherry)}
+.cv-wcard.no li{color:var(--muted)}
+
+/* ---------- SOCIAL PROOF CAROUSEL ---------- */
+.cv-proof{position:relative;z-index:2;margin-top:46px;overflow:hidden;
+  -webkit-mask:linear-gradient(90deg,transparent 0,#000 7%,#000 93%,transparent 100%);mask:linear-gradient(90deg,transparent 0,#000 7%,#000 93%,transparent 100%)}
+.cv-ptrack{display:flex;align-items:center;gap:18px;width:max-content;will-change:transform;padding:12px 0 26px}
+.cv .cv-proofcard{flex:none;height:420px;padding:8px;border-radius:20px;background:var(--panel);border:1px solid rgba(226,176,74,.3);
+  box-shadow:0 30px 60px -30px rgba(0,0,0,.85);cursor:zoom-in;transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .3s}
+.cv .cv-proofcard:hover{transform:translateY(-6px) scale(1.02);border-color:var(--gold)}
+.cv-proofcard img{height:100%;width:auto;max-width:760px;object-fit:contain;border-radius:14px;display:block;background:#12070B}
+.cv-lb{position:fixed;inset:0;z-index:95;background:rgba(10,4,6,.93);display:grid;place-items:center;padding:56px 16px 24px;opacity:0;pointer-events:none;transition:opacity .3s}
+.cv-lb.on{opacity:1;pointer-events:auto}
+.cv-lb img{max-width:min(100%,900px);max-height:86vh;border-radius:16px;box-shadow:0 40px 80px rgba(0,0,0,.6)}
+.cv .cv-lb button{position:absolute;top:14px;right:14px;width:44px;height:44px;border-radius:12px;background:rgba(243,217,207,.1);color:var(--txt);font-size:26px;line-height:1}
+@media (max-width:760px){.cv .cv-proofcard{height:340px}.cv-proofcard img{max-width:86vw}}
+
+/* ---------- REVIEWS ---------- */
+.cv-revs{columns:3 300px;column-gap:18px;margin-top:46px}
+.cv-rev{break-inside:avoid;margin-bottom:18px;padding:24px;border-radius:var(--r);background:var(--panel);border:1px solid var(--line)}
+.cv-rev .st{color:var(--gold);letter-spacing:2px;font-size:14px;margin-bottom:10px}
+.cv-rev p{font-size:15px;color:var(--rose);margin-bottom:16px}
+.cv-rev img{border-radius:12px;margin-bottom:14px;border:1px solid var(--line)}
+.cv-rev .who{display:flex;align-items:center;gap:10px;font-size:13.5px}
+.cv-rev .who i{width:36px;height:36px;border-radius:50%;background:var(--grad);color:#1A0A0F;display:grid;place-items:center;font-style:normal;font-weight:800}
+.cv-rev .who b{display:block;color:var(--txt)}
+.cv-rev .who small{color:var(--muted)}
+.cv-launch{max-width:760px;margin:46px auto 0;padding:36px;border-radius:26px;text-align:center;
+  background:linear-gradient(var(--panel),var(--panel)) padding-box,linear-gradient(135deg,rgba(247,220,142,.6),rgba(224,67,107,.35),rgba(247,220,142,.5)) border-box;border:1px solid transparent}
+.cv-launch .big{font-family:var(--hd);font-size:clamp(22px,3vw,32px);color:var(--txt);margin-bottom:10px}
+.cv-launch p{font-size:15px}
+
+/* ---------- CREATOR ---------- */
+.cv-creator{display:grid;grid-template-columns:auto 1fr;gap:40px;align-items:center;max-width:960px;margin:0 auto;padding:40px;border-radius:28px;background:var(--panel);border:1px solid var(--line)}
+.cv-avatar{width:200px;aspect-ratio:1;border-radius:24px;overflow:hidden;position:relative;background:linear-gradient(160deg,#4a1a28,#1e0910);border:1px solid rgba(226,176,74,.4);display:grid;place-items:center;font-family:var(--hd);font-size:72px;color:var(--gold-hi)}
+.cv-avatar img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.cv-creator h3{font-size:clamp(22px,2.6vw,30px);margin:12px 0 12px}
+.cv-creator p{font-size:15.5px}
+.cv-creator p+p{margin-top:10px}
+
+/* ---------- OFFER ---------- */
+.cv-offer-sec{background:radial-gradient(60vw 40vw at 50% 0%,rgba(224,67,107,.16),transparent 60%),var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.cv-offer{position:relative;max-width:640px;margin:46px auto 0;border-radius:30px;padding:42px 34px;text-align:center;
+  background:linear-gradient(#2A0F17,#1E0910) padding-box,conic-gradient(from var(--cva,0deg),#F7DC8E,#B5862C,#E0436B,#F5D27A,#F7DC8E) border-box;border:2px solid transparent;
+  box-shadow:0 50px 120px -40px rgba(226,176,74,.4);animation:cvAng 8s linear infinite}
+@property --cva{syntax:'<angle>';initial-value:0deg;inherits:false}
+@keyframes cvAng{to{--cva:360deg}}
+.cv-offer .tag{display:inline-block;padding:7px 14px;border-radius:99px;background:rgba(224,67,107,.16);color:#ff8fab;font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase}
+.cv-offer h3{font-size:clamp(26px,3.4vw,38px);margin:16px 0 6px}
+.cv-incl{list-style:none;text-align:left;display:grid;gap:12px;margin:26px 0;padding:22px;border-radius:18px;background:rgba(243,217,207,.03);border:1px solid var(--line)}
+.cv-incl li{display:flex;gap:12px;font-size:15px;font-weight:600;color:var(--rose)}
+.cv-incl svg{flex:none;width:20px;height:20px;color:var(--gold);margin-top:2px}
+.cv-price{display:flex;align-items:flex-end;justify-content:center;gap:14px}
+.cv-price b{font-family:var(--hd);font-size:clamp(62px,8vw,88px);line-height:.85;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.cv-price span{text-align:left;font-size:13px;color:var(--muted);line-height:1.35;padding-bottom:6px}
+.cv-price span .cv-strike{font-size:18px;color:var(--rose)}
+.cv-ocd{display:flex;justify-content:center;gap:10px;margin:22px 0 4px}
+.cv-ocd div{min-width:64px;padding:10px 6px;border-radius:14px;background:rgba(243,217,207,.05);border:1px solid var(--line)}
+.cv-ocd b{display:block;font-family:var(--hd);font-size:24px;color:var(--txt);font-variant-numeric:tabular-nums}
+.cv-ocd small{font-size:10.5px;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+.cv-ocd-l{font-size:13px;color:var(--muted)}
+.cv-offer .cv-btn{width:100%;min-height:64px;font-size:18px;margin-top:22px}
+.cv-secure{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 16px;margin-top:16px;font-size:12.5px;color:var(--muted)}
+.cv-final-note{margin-top:14px;font-size:12.5px;color:var(--muted)}
+.cv-final-note a{color:var(--gold-hi);text-decoration:underline}
+
+/* ---------- FAQ ---------- */
+.cv-faq{max-width:800px;margin:46px auto 0;display:grid;gap:12px}
+.cv-faq details{border-radius:18px;background:var(--panel);border:1px solid var(--line);transition:border-color .3s}
+.cv-faq details[open]{border-color:rgba(226,176,74,.4)}
+.cv-faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 22px;font-weight:700;font-size:16px;color:var(--txt)}
+.cv-faq summary::-webkit-details-marker{display:none}
+.cv-faq summary::after{content:"+";flex:none;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:rgba(226,176,74,.12);color:var(--gold-hi);font-size:20px;transition:transform .3s}
+.cv-faq details[open] summary::after{transform:rotate(45deg)}
+.cv-faq details p{padding:0 22px 20px;font-size:15px}
+
+/* ---------- FINAL CTA + FOOTER ---------- */
+.cv-final{text-align:center;padding:120px 0;position:relative;overflow:hidden}
+.cv-final::before{content:"";position:absolute;left:50%;top:50%;width:1000px;height:1000px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(226,176,74,.16),rgba(224,67,107,.08) 40%,transparent 62%);pointer-events:none}
+.cv-final .cv-wrap{position:relative}
+.cv-final .cv-h2{font-size:clamp(34px,5.4vw,72px)}
+.cv-final .cv-ctas{justify-content:center}
+.cv-foot{border-top:1px solid var(--line);padding:30px 0 120px;font-size:13px;color:var(--muted)}
+.cv-foot .cv-wrap{display:flex;flex-wrap:wrap;gap:14px 28px;justify-content:space-between;align-items:center}
+.cv-foot nav{display:flex;flex-wrap:wrap;gap:8px 22px}
+.cv-foot a:hover{color:var(--gold-hi)}
+
+/* ---------- STICKY MOBILE BAR ---------- */
+.cv-sticky{position:fixed;left:0;right:0;bottom:0;z-index:65;display:none;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+  background:rgba(26,10,15,.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line2);transform:translateY(110%);transition:transform .35s ease}
+.cv-sticky.show{transform:none}
+.cv-sticky div{font-size:11.5px;color:var(--muted);line-height:1.3}
+.cv-sticky b{display:block;font-family:var(--hd);font-size:20px;color:var(--txt)}
+.cv .cv-sticky .cv-btn{min-height:48px;padding:0 20px;font-size:15px;border-radius:13px}
+
+/* ---------- PURCHASE TOAST (real orders only) ---------- */
+.cv-toast{position:fixed;left:20px;bottom:20px;z-index:70;display:flex;align-items:center;gap:12px;max-width:330px;padding:12px 38px 12px 12px;border-radius:16px;
+  background:rgba(46,17,25,.96);border:1px solid rgba(226,176,74,.35);box-shadow:0 24px 50px -16px rgba(0,0,0,.8);backdrop-filter:blur(10px);
+  transform:translateY(140%);opacity:0;transition:transform .5s cubic-bezier(.2,.8,.2,1),opacity .5s}
+.cv-toast.show{transform:none;opacity:1}
+.cv-toast i{flex:none;width:42px;height:42px;border-radius:12px;background:var(--grad);color:#1A0A0F;display:grid;place-items:center;font-style:normal;font-weight:800;font-family:var(--hd)}
+.cv-toast p{font-size:13px;line-height:1.4;color:var(--rose)}
+.cv-toast p b{color:var(--txt)}
+.cv-toast small{display:flex;align-items:center;gap:5px;margin-top:2px;font-size:11.5px;color:var(--muted)}
+.cv-toast small em{font-style:normal;color:#5fd38d}
+.cv-toast button{position:absolute;right:8px;top:8px;width:24px;height:24px;border-radius:7px;color:var(--muted);font-size:15px}
+
+/* ---------- REVEAL ---------- */
+.cv.cv-js .cv-rv{opacity:0;transform:translateY(30px);transition:opacity .8s cubic-bezier(.2,.8,.2,1),transform .8s cubic-bezier(.2,.8,.2,1)}
+.cv.cv-js .cv-rv.in{opacity:1;transform:none}
+.cv-d1{transition-delay:.08s!important}.cv-d2{transition-delay:.16s!important}.cv-d3{transition-delay:.24s!important}
+
+/* ---------- MOTION LAYER ---------- */
+.cv-dust{position:fixed;inset:0;z-index:1;width:100%;height:100%;pointer-events:none;opacity:.85}
+.cv-sec>.cv-wrap,.cv-final>.cv-wrap,.cv-tools>.cv-wrap,.cv-foot>.cv-wrap{position:relative;z-index:2}
+.cv-glow{position:fixed;left:0;top:0;width:560px;height:560px;margin:-280px 0 0 -280px;border-radius:50%;z-index:1;pointer-events:none;
+  background:radial-gradient(circle,rgba(226,176,74,.10),rgba(224,67,107,.05) 40%,transparent 66%);mix-blend-mode:screen;opacity:0;transition:opacity .6s;will-change:transform}
+.cv-glow.on{opacity:1}
+.cv-prog{position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--grad);transform-origin:left;transform:scaleX(0);box-shadow:0 0 12px rgba(226,176,74,.7)}
+.cv [data-cv-3d]{transition:border-color .3s,background .3s!important;will-change:transform,opacity;transform-origin:50% 100%}
+/* 3D word flip for headings */
+.cv-w{display:inline-block;perspective:700px;vertical-align:top}
+.cv-w>span{display:inline-block;transform-origin:50% 100%}
+.cv.cv-js .cv-w>span{opacity:0;transform:rotateX(-95deg) translateY(28%);transition:transform .9s cubic-bezier(.2,.8,.15,1),opacity .6s ease;transition-delay:calc(var(--i,0) * 55ms)}
+.cv.cv-js .in .cv-w>span,.cv.cv-js.cv-loaded .cv-h1 .cv-w>span{opacity:1;transform:none}
+.cv-h1.cv-in{animation:none}
+/* hero 3D canvas */
+.cv-vault{position:absolute;top:-6%;left:-22%;width:128%;height:112%;opacity:0;transition:opacity 1.2s ease;pointer-events:none}
+.cv-visual.has3d .cv-vault{opacity:1}
+.cv-visual.has3d .cv-stage{opacity:0;transition:opacity .8s;pointer-events:none}
+.cv-visual::before{content:"";position:absolute;inset:8% 6%;border-radius:50%;background:radial-gradient(circle,rgba(226,176,74,.22),rgba(224,67,107,.1) 45%,transparent 70%);filter:blur(10px)}
+/* velocity marquee */
+.cv-marq{position:relative;z-index:2;overflow:hidden;padding:34px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg2)}
+.cv-mrow{display:flex;width:max-content;will-change:transform;white-space:nowrap}
+.cv-mrow span{font-family:var(--hd);font-weight:800;font-size:clamp(38px,6.4vw,92px);line-height:1.05;letter-spacing:-.02em;padding-right:.5em;display:inline-flex;align-items:center;gap:.5em}
+.cv-mrow span::after{content:"✦";font-size:.45em;color:var(--gold)}
+.cv-mrow.a span{color:transparent;-webkit-text-stroke:1.4px rgba(243,217,207,.28)}
+.cv-mrow.b span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.cv-mrow.b span::after{-webkit-text-fill-color:var(--cherry);color:var(--cherry)}
+/* orbit rings behind offer */
+.cv-offer-wrap{position:relative;perspective:1200px}
+.cv-orbit{position:absolute;left:50%;top:50%;width:min(860px,120vw);aspect-ratio:1;margin:calc(min(860px,120vw) / -2) 0 0 calc(min(860px,120vw) / -2);pointer-events:none;transform-style:preserve-3d}
+.cv-orbit i{position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(226,176,74,.28);transform:rotateX(74deg);animation:cvOrb 18s linear infinite}
+.cv-orbit i:nth-child(2){inset:9%;border-color:rgba(224,67,107,.25);animation-duration:26s;animation-direction:reverse}
+.cv-orbit i::after{content:"";position:absolute;top:-7px;left:50%;width:14px;height:14px;border-radius:50%;background:var(--grad);box-shadow:0 0 18px var(--gold)}
+.cv-orbit i:nth-child(2)::after{background:var(--cherry);box-shadow:0 0 18px var(--cherry)}
+@keyframes cvOrb{to{transform:rotateX(74deg) rotateZ(360deg)}}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width:1024px){
+  .cv-bento{grid-template-columns:repeat(2,1fr)}
+  .cv-gal,.cv-apps{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:860px){
+  .cv-sec{padding:76px 0}
+  .cv-hero{padding:34px 0 64px}
+  .cv-hero .cv-wrap{grid-template-columns:1fr;gap:30px}
+  .cv-visual{max-width:520px;margin:0 auto;width:100%}
+  .cv-stage{--rx:6deg;--ry:-10deg}
+  .cv-pain,.cv-who,.cv-sample{grid-template-columns:1fr}
+  .cv-math{grid-template-columns:1fr}
+  .cv-op{padding:2px 0}
+  .cv-creator{grid-template-columns:1fr;text-align:center;padding:30px 22px}
+  .cv-avatar{margin:0 auto;width:150px;font-size:56px}
+  .cv-nav nav{display:none}
+  .cv-sticky{display:flex}
+  .cv-toast{bottom:84px;left:12px;right:12px;max-width:none}
+  .cv-grain{display:none}
+  .cv-hero--video{min-height:auto;align-items:flex-start;padding:28px 0 44px}
+  .cv-hero-bg video{object-position:center 35%}
+  .cv-hero-bg::after{background:linear-gradient(180deg,rgba(26,10,15,.55) 0%,rgba(26,10,15,.72) 30%,rgba(26,10,15,.88) 60%,var(--bg) 100%)}
+  .cv-hero--video .cv-eyebrow{font-size:10.5px;letter-spacing:1.1px;padding:6px 11px}
+  .cv-hero--video .cv-h1{font-size:clamp(32px,9.4vw,40px);margin:16px 0 14px}
+  .cv-vault{left:-14%;width:120%}
+}
+@media (max-width:560px){
+  .cv-wrap{padding:0 16px}
+  .cv-bar{font-size:12px;gap:6px 10px;padding:8px 10px}
+  .cv-cd span{min-width:26px;font-size:12px;padding:2px 4px}
+  .cv-nav .cv-wrap{height:58px}
+  .cv-nav .cv-btn{display:none}
+  .cv-ctas .cv-btn{width:100%}
+  .cv-gal,.cv-bento,.cv-apps{grid-template-columns:1fr}
+  .cv-tile.hero-t,.cv-tile.wide{grid-column:auto}
+  .cv-tile.hero-t{min-height:330px}
+  .cv-chip{font-size:10px;padding:6px 9px}
+  .cv-chip.c1{left:2%;transform:translateZ(90px)}
+  .cv-chip.c2{right:2%;transform:translateZ(60px)}
+  .cv-chip.c3{transform:translateZ(90px)}
+  .cv-ring{border-width:6px;animation:none;transform:translateZ(80px) rotateX(68deg)}
+  .cv-sbody{padding:14px 12px;min-height:118px}
+  .cv-ba{aspect-ratio:4/5}
+  .cv-mb-hero,.cv-ma-hero{grid-template-columns:1fr;gap:6%}
+  .cv-mb-img{display:none}
+  .cv-ma-3d{width:44%}
+  .cv-offer{padding:32px 18px}
+  .cv-ocd div{min-width:58px}
+  .cv-wcard,.cv-pcard{padding:24px 20px}
+  .cv-launch{padding:28px 20px}
+}
+
+/* ---------- REDUCED MOTION ---------- */
+@media (prefers-reduced-motion:reduce){
+  .cv *,.cv *::before,.cv *::after{animation:none!important;transition:none!important}
+  .cv.cv-js .cv-rv,.cv.cv-js .cv-w>span{opacity:1;transform:none}
+  .cv-dust,.cv-glow,.cv-orbit{display:none}
+}
+</style>
+
+<div class="cv" id="cv">
+  <div class="cv-grain" aria-hidden="true"></div>
+  <canvas class="cv-dust" aria-hidden="true"></canvas>
+  <div class="cv-glow" aria-hidden="true"></div>
+
+  <!-- STICKY HEADER: countdown + nav -->
+  <div class="cv-head">
+    <div class="cv-bar" role="status">
+      <span data-cv-bar-live>🔥 <b>Launch price ₹299</b> ends in</span>
+      <span class="cv-cd" data-cv-cd aria-label="Time left at launch price"><span data-u="d">00</span>:<span data-u="h">00</span>:<span data-u="m">00</span>:<span data-u="s">00</span></span>
+      <span data-cv-bar-live>then <b data-cv-after>₹499</b></span>
+      <span data-cv-bar-ended hidden>Launch price has ended. <b>3D Site Vault is now ₹<span data-cv-now>499</span></b></span>
+    </div>
+    <header class="cv-nav">
+      <div class="cv-wrap">
+        <a class="cv-logo" href="#cv-top" aria-label="3D Site Vault home"><i><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2c.7 6.9 3.1 9.3 10 10-6.9.7-9.3 3.1-10 10-.7-6.9-3.1-9.3-10-10 6.9-.7 9.3-3.1 10-10z"/></svg></i>3D SITE <b>VAULT</b></a>
+        <nav aria-label="Sections"><a href="#cv-gallery">Examples</a><a href="#cv-apps">Bonus apps</a><a href="#cv-sample">Free prompt</a><a href="#cv-inside">What's inside</a><a href="#cv-faq">FAQ</a></nav>
+        <a class="cv-btn cv-btn-p" href="#cv-offer" data-cv-buy>Get it · <span data-cv-price>₹299</span></a>
+      </div>
+      <div class="cv-prog" aria-hidden="true"></div>
+    </header>
+  </div>
+
+  <!-- 1. HERO -->
+  <section class="cv-hero" id="cv-top" aria-labelledby="cv-h1">
+    <div class="cv-wrap">
+      <div>
+        <span class="cv-eyebrow cv-in"><i></i>30 website prompts + 4 app UI prompts · No coding</span>
+        <h1 class="cv-h1 cv-in cv-in2" id="cv-h1">Build <span class="cv-g">premium 3D websites</span> with AI. Sell them to local businesses.</h1>
+        <p class="cv-hero-sub cv-in cv-in3">Ready-made website concepts and prompts for <strong>clinics, gyms, jewellers, coaching classes and more</strong>. Paste one into Claude, Lovable or Elementor, customise it, and show the owner a live site instead of a PDF quote.</p>
+        <div class="cv-ctas cv-in cv-in4">
+          <a class="cv-btn cv-btn-p" href="#cv-offer" data-cv-buy>Get the Vault
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <div class="cv-pricetag"><b data-cv-price>₹299</b><small data-cv-pricenote>launch price · <span data-cv-after>₹499</span> after</small></div>
+        </div>
+        <div class="cv-ticks cv-in cv-in5">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Instant download</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Pay by UPI</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Unlimited client projects</span>
+        </div>
+      </div>
+      <div class="cv-visual cv-in cv-in3" aria-hidden="true">
+        <canvas class="cv-vault"></canvas>
+        <div class="cv-stage" data-cv-stage>
+          <div class="cv-site s3" style="--c1:#FF7A1A;--c2:#7A2A00"><div class="cv-sbar"><i></i><i></i><i></i><span>ironpeak.fit</span></div><div class="cv-sbody"><div><b>Train like you mean it</b><em></em><em></em><u>Free trial</u></div><div class="cv-orb"></div></div></div>
+          <div class="cv-site s2" style="--c1:#19D3C5;--c2:#0B5F59"><div class="cv-sbar"><i></i><i></i><i></i><span>auradental.in</span></div><div class="cv-sbody"><div><b>Smile, redesigned</b><em></em><em></em><u>Book a visit</u></div><div class="cv-orb"></div></div></div>
+          <div class="cv-site s1" style="--c1:#E2B04A;--c2:#6B4300"><div class="cv-sbar"><i></i><i></i><i></i><span>suvarnajewels.in</span></div><div class="cv-sbody"><div><b>Gold that tells your story</b><em></em><em></em><u>View collection</u></div><div class="cv-orb"></div></div></div>
+          <div class="cv-ring"></div>
+          <div class="cv-chip c1">✦ <b>Prompt #07</b> · Jeweller</div>
+          <div class="cv-chip c2">Elementor-ready ✓</div>
+          <div class="cv-chip c3">No coding needed</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cv-tools" aria-label="Works with">
+    <div class="cv-wrap"><small>Works with</small><span>Claude</span><span>Claude Code</span><span>Lovable</span><span>Bolt</span><span>ChatGPT</span><span>Elementor</span></div>
+  </div>
+
+  <!-- 2. GALLERY -->
+  <section class="cv-sec" id="cv-gallery">
+    <div class="cv-wrap">
+      <div class="cv-center cv-rv">
+        <span class="cv-eyebrow"><i></i>See what you can build</span>
+        <h2 class="cv-h2">One prompt. <span class="cv-g">One premium site.</span></h2>
+        <p class="cv-lead">Every concept in the Vault is written for a real type of local business. Here's the kind of website each one produces.</p>
+      </div>
+      <div class="cv-gal" data-cv-gallery></div>
+      <p class="cv-gnote" data-cv-galnote></p>
+    </div>
+  </section>
+
+  <div class="cv-marq" aria-hidden="true">
+    <div class="cv-mrow a"><span>Clinics</span><span>Gyms</span><span>Jewellers</span><span>Coaching</span><span>Restaurants</span><span>Salons</span><span>Real estate</span><span>Cafés</span></div>
+    <div class="cv-mrow b"><span>30 prompts</span><span>3D websites</span><span>No coding</span><span>Elementor-ready</span><span>30 prompts</span><span>3D websites</span><span>No coding</span><span>Elementor-ready</span></div>
+  </div>
+
+  <!-- BONUS: APP UI PROMPTS -->
+  <section class="cv-sec" id="cv-apps">
+    <div class="cv-wrap">
+      <div class="cv-center cv-rv">
+        <span class="cv-eyebrow"><i></i>Bonus · App UI prompts</span>
+        <h2 class="cv-h2">Not just websites. <span class="cv-g">Full app designs too.</span></h2>
+        <p class="cv-lead">4 bonus prompts that design complete mobile apps: splash, onboarding, sign-in, home, core features, paywall and profile, each with its own design system. Perfect for your portfolio and for pitching startups.</p>
+      </div>
+      <div class="cv-apps">
+
+        <article class="cv-app cv-rv">
+          <div class="cv-app-stage" style="--a:#22C55E" aria-hidden="true">
+            <div class="cv-ph l"><div class="u u-splash" style="background:#0f1410"><div class="u-logo">FitFuel</div><div class="u-s" style="opacity:.7">AI calorie coach</div></div></div>
+            <div class="cv-ph r"><div class="u"><div class="u-h">Meal scanned</div>
+              <div class="u-img" style="height:70px;background:radial-gradient(circle at 35% 40%,#f4d35e 0 14%,transparent 15%),radial-gradient(circle at 62% 55%,#e76f51 0 16%,transparent 17%),radial-gradient(circle at 45% 70%,#6bbf59 0 15%,transparent 16%),radial-gradient(circle,#f6efe4 0 46%,#d9cbb6 47% 50%,#2a2a2a 51%)"></div>
+              <div class="u-card"><b style="font-size:8px">Paneer bowl</b><div class="u-s">520 kcal · 32g protein</div></div><div class="u-btn">Save meal</div></div></div>
+            <div class="cv-ph c"><div class="u"><div class="u-s">Good morning</div><div class="u-h">Aarav 👋</div>
+              <div class="u-ring"><b>2,140<small>kcal left</small></b></div>
+              <div class="u-row"><div class="u-card"><b>120g</b><div class="u-s">Protein</div></div><div class="u-card"><b>210g</b><div class="u-s">Carbs</div></div><div class="u-card"><b>60g</b><div class="u-s">Fat</div></div></div>
+              <div class="u-btn" style="margin-top:4px;background:#111">Scan meal with AI</div>
+              <div class="u-tab"><i class="on"></i><i></i><i></i><i></i></div></div></div>
+          </div>
+          <div class="cv-app-meta"><small>App prompt #1</small><b>Calorie tracker</b><p>AI meal scan, macros, progress, streaks and a trial paywall.</p></div>
+        </article>
+
+        <article class="cv-app cv-rv cv-d1">
+          <div class="cv-app-stage" style="--a:#2F6BFF" aria-hidden="true">
+            <div class="cv-ph l"><div class="u u-splash" style="background:linear-gradient(180deg,#9cc6ff 0%,#4f86ff 45%,#123c9c 100%)"><div class="u-logo">TripNest</div><div class="u-s" style="opacity:.85">AI travel planner</div></div></div>
+            <div class="cv-ph r"><div class="u"><div class="u-h">Goa · Day 1</div><div class="u-s">Arrival &amp; beaches</div>
+              <div class="u-row" style="align-items:center"><span class="u-dot"></span><div><b>9:00</b> Check in</div></div><div class="u-l"></div>
+              <div class="u-row" style="align-items:center"><span class="u-dot"></span><div><b>13:00</b> Baga beach</div></div><div class="u-l"></div>
+              <div class="u-row" style="align-items:center"><span class="u-dot"></span><div><b>19:30</b> Sunset dinner</div></div><div class="u-l" style="width:70%"></div>
+              <div class="u-btn">+ Add activity</div></div></div>
+            <div class="cv-ph c"><div class="u"><div class="u-card u-s" style="opacity:1">🔍 Where to next?</div>
+              <div class="u-card" style="background:color-mix(in srgb,#2F6BFF 12%,#fff);font-weight:700;font-size:5.5px">✦ Ask AI to plan my trip</div>
+              <div class="u-img" style="height:76px;background:linear-gradient(180deg,#8fd3ff 0%,#4aa3ff 40%,#2f6bff 62%,#f2d6a2 63%,#e8c48a 100%)"><div style="position:absolute;left:6px;bottom:5px;color:#fff;font-weight:800;font-size:8px;text-shadow:0 1px 4px rgba(0,0,0,.4)">Goa, India<br><span style="font-size:5.5px;font-weight:600">4 days · ₹18,000</span></div></div>
+              <div class="u-row" style="gap:3px"><span class="u-chip on">Beach</span><span class="u-chip">Hills</span><span class="u-chip">Food</span></div>
+              <div class="u-row"><div class="u-img" style="height:34px;background:linear-gradient(160deg,#b7e4c7,#2d6a4f)"></div><div class="u-img" style="height:34px;background:linear-gradient(160deg,#ffd6a5,#e07a5f)"></div></div>
+              <div class="u-tab"><i class="on"></i><i></i><i></i><i></i></div></div></div>
+          </div>
+          <div class="cv-app-meta"><small>App prompt #2</small><b>AI trip planner</b><p>Preferences, AI itinerary, budget tracker and travel memories.</p></div>
+        </article>
+
+        <article class="cv-app cv-rv cv-d2">
+          <div class="cv-app-stage" style="--a:#F06A4E" aria-hidden="true">
+            <div class="cv-ph l"><div class="u u-splash" style="background:#fff4ef;color:#F06A4E"><div class="u-logo">Spoonful</div><div class="u-s">Cook. Share. Love.</div></div></div>
+            <div class="cv-ph r"><div class="u"><div class="u-s">Step 3 of 6</div><div class="u-h">Sauté the masala</div><div class="u-l"></div><div class="u-l" style="width:80%"></div>
+              <div class="u-ring" style="width:58px;height:58px"><b>08:00<small>timer</small></b></div>
+              <div class="u-row" style="margin-top:auto"><div class="u-btn" style="background:rgba(0,0,0,.08);color:#333">Back</div><div class="u-btn">Next step</div></div></div></div>
+            <div class="cv-ph c"><div class="u"><div class="u-h">What's cooking<br>today?</div>
+              <div class="u-img" style="height:74px;background:radial-gradient(circle at 40% 45%,#f4a261 0 18%,transparent 19%),radial-gradient(circle at 60% 55%,#e9c46a 0 20%,transparent 21%),radial-gradient(circle at 50% 50%,#c0392b 0 30%,#fdf6ec 31% 52%,#e8dccb 53% 56%,#2b1c14 57%)"><div style="position:absolute;left:6px;bottom:5px;color:#fff;font-weight:800;font-size:7px;text-shadow:0 1px 4px rgba(0,0,0,.6)">Paneer tikka pasta<br><span style="font-size:5.5px;font-weight:600">25 min · Easy</span></div></div>
+              <div class="u-row" style="gap:3px"><span class="u-chip on">Veg</span><span class="u-chip">Quick</span><span class="u-chip">Desserts</span></div>
+              <div class="u-row"><div class="u-img" style="height:36px;background:radial-gradient(circle,#ffb703 0 30%,#fb8500 31% 50%,#3d2b1f 51%)"></div><div class="u-img" style="height:36px;background:radial-gradient(circle,#8ecae6 0 22%,#f1faee 23% 50%,#3d2b1f 51%)"></div></div>
+              <div class="u-tab"><i class="on"></i><i></i><i></i><i></i></div></div></div>
+          </div>
+          <div class="cv-app-meta"><small>App prompt #3</small><b>Recipe app</b><p>Discover, cooking mode, shopping list and saved collections.</p></div>
+        </article>
+
+        <article class="cv-app cv-rv cv-d3">
+          <div class="cv-app-stage" style="--a:#FF4D8D" aria-hidden="true">
+            <div class="cv-ph l"><div class="u u-splash" style="background:linear-gradient(160deg,#ff7aa8,#8b5cf6)"><div style="font-size:16px">♥</div><div class="u-logo">Kindred</div><div class="u-s" style="opacity:.85">Find something real</div></div></div>
+            <div class="cv-ph r"><div class="u"><div class="u-h">Ananya</div><div class="u-s">Matched today</div>
+              <div class="u-bub">Hey! Loved your trek photos 🏔️</div><div class="u-bub me">Thanks! Rajgad last month</div><div class="u-bub">No way, I've wanted to go there</div><div class="u-bub me">Let's plan one ☕</div>
+              <div class="u-card u-s" style="margin-top:auto;opacity:1">Type a message…</div></div></div>
+            <div class="cv-ph c"><div class="u" style="padding-bottom:6px"><div class="u-h" style="color:#FF4D8D">Kindred</div>
+              <div class="u-img" style="flex:1;background:radial-gradient(circle at 50% 36%,#f3c7a8 0 15%,transparent 16%),radial-gradient(ellipse at 50% 92%,#7c3aed 0 34%,transparent 35%),radial-gradient(circle at 50% 30%,#3b2418 0 21%,transparent 22%),linear-gradient(170deg,#ffd1e1,#c4b5fd)">
+                <div style="position:absolute;left:6px;bottom:6px;color:#fff;font-weight:800;font-size:8px;text-shadow:0 1px 4px rgba(0,0,0,.5)">Ananya, 26<br><span style="font-size:5.5px;font-weight:600">Pune · 3 km away</span></div></div>
+              <div class="u-row" style="justify-content:center;gap:10px;flex:none"><span style="flex:none;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.15);display:grid;place-items:center;font-size:8px">✕</span><span style="flex:none;width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#FF4D8D,#8b5cf6);color:#fff;display:grid;place-items:center;font-size:8px">♥</span></div></div></div>
+          </div>
+          <div class="cv-app-meta"><small>App prompt #4</small><b>Dating app</b><p>Profiles, matching, chat, prompts, premium and safety screens.</p></div>
+        </article>
+
+      </div>
+      <p class="cv-gnote" data-cv-appnote>Concept previews. Each prompt generates a full multi-screen app design in Claude, Lovable or Bolt.</p>
+    </div>
+  </section>
+
+  <!-- 3. THE ₹5,000 TRAP -->
+  <section class="cv-sec" style="background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+    <div class="cv-wrap">
+      <div class="cv-center cv-rv">
+        <span class="cv-eyebrow"><i></i>Sound familiar?</span>
+        <h2 class="cv-h2">The <span class="cv-g">₹5,000 website</span> trap</h2>
+      </div>
+      <div class="cv-pain">
+        <div class="cv-pcard cv-rv"><span class="n">01</span><h3>Every client asks "kitna lagega?"</h3><p>You send a quote, they compare it with someone cheaper, and the conversation becomes about price, not quality.</p></div>
+        <div class="cv-pcard cv-rv cv-d1"><span class="n">02</span><h3>AI gives you generic templates</h3><p>You type "make me a website" and get the same blue-button layout everyone else is selling.</p></div>
+        <div class="cv-pcard cv-rv cv-d2"><span class="n">03</span><h3>Premium design takes days</h3><p>Hunting for inspiration, fighting animations, fixing mobile. By the time it looks good, the client has moved on.</p></div>
+      </div>
+      <p class="cv-shift cv-rv">The fix isn't a cheaper price. It's showing a website so good <span class="cv-g">the price stops mattering.</span></p>
+    </div>
+  </section>
+
+  <!-- 4. BEFORE / AFTER -->
+  <section class="cv-sec">
+    <div class="cv-wrap">
+      <div class="cv-center cv-rv">
+        <span class="cv-eyebrow"><i></i>Drag to compare</span>
+        <h2 class="cv-h2">Same AI. <span class="cv-g">Better instructions.</span></h2>
+        <p class="cv-lead">The difference between a forgettable site and a premium one is the prompt. Slide to see it.</p>
+      </div>
+      <div class="cv-ba cv-rv" data-cv-ba>
+        <div class="cv-ba-l cv-ba-before">
+          <span class="cv-ba-tag">Typical prompt</span>
+          <div class="cv-mb">
+            <div class="cv-mb-nav"><span>Suvarna Jewellers</span><span>Home · About · Contact</span></div>
+            <div class="cv-mb-hero"><div><h4>Welcome to Our Jewellery Shop</h4><p>We sell gold and silver jewellery at best prices. Visit our shop today for more details.</p><button type="button" tabindex="-1">Contact Us</button></div><div class="cv-mb-img">[ stock photo ]</div></div>
+          </div>
+        </div>
+        <div class="cv-ba-l cv-ba-after">
+          <span class="cv-ba-tag">Vault prompt #07</span>
+          <div class="cv-ma">
+            <div class="cv-ma-nav"><span style="font-family:var(--hd);color:#fff;display:inline">SUVARNA</span><span>Bridal · Daily wear · Visit us</span></div>
+            <div class="cv-ma-hero"><div><h4>Gold that tells <i>your story</i></h4><p>Hallmarked bridal and everyday pieces, made to be passed down.</p><b>Book a store visit →</b></div><div class="cv-ma-3d"></div></div>
+          </div>
+        </div>
+        <div class="cv-ba-handle" aria-hidden="true"></div>
+        <input type="range" min="0" max="100" value="50" aria-label="Compare a typical prompt result with a Vault prompt result">
+      </div>
+      <p class="cv-ba-note">Illustration of the difference in output style.</p>
+    </div>
+  </section>
+
+  <!-- 5. FREE SAMPLE PROMPT -->
+  <section class="cv-sec" id="cv-sample" style="background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+    <div class="cv-wrap">
+      <div class="cv-sample">
+        <div class="cv-rv">
+          <span class="cv-eyebrow"><i></i>Free · try it now</span>
+          <h2 class="cv-h2">Take one prompt <span class="cv-g">on us</span></h2>
+          <p class="cv-lead">Here's a full prompt from the Vault. Copy it, fill in a real jeweller's details and paste it into Claude. If you like what it builds, imagine 29 more.</p>
+          <ol class="cv-steps3">
+            <li><b>1</b><span><strong>Copy</strong> the prompt with the button.</span></li>
+            <li><b>2</b><span><strong>Replace</strong> the [BRACKETS] with a real store's details.</span></li>
+            <li><b>3</b><span><strong>Paste</strong> it into Claude and open the page it creates.</span></li>
+          </ol>
+        </div>
+        <div class="cv-code cv-rv cv-d1">
+          <div class="cv-code-top"><span>PROMPT #07 · JEWELLERY STORE</span><button class="cv-copy" type="button" data-cv-copy>Copy prompt</button></div>
+<pre data-cv-prompt><span class="k">Act as</span> a senior web designer and front-end developer. Build a one-page website for [STORE NAME], a jewellery store in [CITY] known for [SPECIALITY, e.g. bridal gold and diamond sets].
+
+<span class="k">Design direction:</span> dark luxury. Background #120A0C, champagne-gold #E2B04A accents, ivory text. Headings in a wide modern display font, body in a clean sans-serif. Generous spacing, no clutter.
+
+<span class="k">Hero:</span> a slowly rotating 3D gold ring built with CSS 3D transforms (no images needed), a headline about heirloom craftsmanship, and two buttons: "Book a store visit" (WhatsApp link to [NUMBER]) and "View collections".
+
+<span class="k">Sections:</span> collections grid with hover tilt (Bridal, Daily wear, Men's, Silver) · why-us strip (BIS hallmark, certified diamonds, exchange policy) · testimonials (leave placeholders, do not invent reviews) · store map and timings · sticky WhatsApp button on mobile.
+
+<span class="k">Motion:</span> fade-up reveals on scroll, subtle parallax on the hero ring, respect prefers-reduced-motion.
+
+<span class="k">Output:</span> one self-contained HTML file with scoped CSS and JS that I can paste into a single Elementor HTML widget. Mobile-first, fast, no external libraries.</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. INSIDE THE VAULT -->
+  <section class="cv-sec" id="cv-inside">
+    <div class="cv-wrap">
+      <div class="cv-center cv-rv">
+        <span class="cv-eyebrow"><i></i>What's inside</span>
+        <h2 class="cv-h2">Everything from <span class="cv-g">prompt to paid project</span></h2>
+      </div>
+      <div class="cv-bento">
+        <div class="cv-tile hero-t cv-rv">
+          <div class="cv-mock" data-cv-mockup><div class="cv-book"><div class="f"><small>DIGISHOP365</small><strong>3D SITE<br>VAULT</strong><span>30 premium website prompts</span></div><div class="sp"></div></div></div>
+          <h3>30 website concepts + AI prompts</h3><p>Clinics, gyms, jewellers, coaching classes, restaurants, salons, real estate, cafés and more. Each sets layout, 3D style, motion, colours and copy.</p>
+        </div>
+        <div class="cv-tile wide cv-rv cv-d1"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m12 3 2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9Z"/></svg></div><h3>Elementor 3D master prompt</h3><p>Turns any concept into scoped code you paste into one Elementor HTML widget. No plugins.</p></div>
+        <div class="cv-tile cv-rv cv-d1"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="13.5" r="2.5"/><circle cx="8.5" cy="7.5" r="2.5"/><circle cx="6.5" cy="15.5" r="2.5"/></svg></div><h3>Design library</h3><p>Palettes, font pairs and 3D styles AI understands.</p></div>
+        <div class="cv-tile cv-rv cv-d2"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div><h3>Motion ideas</h3><p>Tilt, parallax and scroll effects to ask for by name.</p></div>
+        <div class="cv-tile cv-rv"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></div><h3>Speed checklist</h3><p>Keeps 3D sites fast on budget Android phones.</p></div>
+        <div class="cv-tile cv-rv cv-d1"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 11h6M9 15h4"/><rect x="4" y="3" width="16" height="18" rx="2"/></svg></div><h3>Client brief sheet</h3><p>What to ask an owner before you build.</p></div>
+        <div class="cv-tile wide cv-rv cv-d2"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></svg></div><h3>Pitch &amp; WhatsApp scripts</h3><p>What to send a business owner with your demo link, and how to talk about price.</p></div>
+        <div class="cv-tile wide cv-rv" style="border-color:rgba(226,176,74,.4);background:linear-gradient(135deg,rgba(226,176,74,.14),transparent 60%),var(--panel)"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M10 6h4M11 18h2"/></svg></div><h3><span style="color:var(--gold-hi)">BONUS</span> · 4 app UI prompts</h3><p>Full mobile app designs: calorie tracker, AI trip planner, recipe app and dating app.</p></div>
+        <div class="cv-tile wide cv-rv cv-d1"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 20h16"/></svg></div><h3>Deploy guide</h3><p>Go live on WordPress + Elementor, Vercel or Netlify, step by step.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. THE SIMPLE MATHS -->
+  <section class="cv-sec" style="background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+    <div class="cv-wrap">
+      <div class="cv-center cv-rv">
+        <span class="cv-eyebrow"><i></i>The simple maths</span>
+        <h2 class="cv-h2">Pays for itself with <span class="cv-g">one client</span></h2>
+      </div>
+      <div class="cv-math">
+        <div class="cv-mcard cv-rv"><b data-cv-price>₹299</b><p>The Vault, one time. Less than a pizza.</p></div>
+        <div class="cv-op cv-rv cv-d1">→</div>
+        <div class="cv-mcard hl cv-rv cv-d1"><b class="cv-g" data-cv-count>₹10K–50K+</b><p>What local businesses commonly pay for a good website.</p></div>
+        <div class="cv-op cv-rv cv-d2">×</div>
+        <div class="cv-mcard cv-rv cv-d2"><b>∞</b><p>Reuse every prompt for every client you get.</p></div>
+      </div>
+      <p class="cv-foot-note">An example, not a promise. Your results depend on your skills and how many businesses you reach out to.</p>
+    </div>
+  </section>
+
+  <!-- 8. WHO -->
+  <section class="cv-sec">
+    <div class="cv-wrap">
+      <div class="cv-center cv-rv">
+        <span class="cv-eyebrow"><i></i>Is it for you?</span>
+        <h2 class="cv-h2">Built for <span class="cv-g">doers</span></h2>
+      </div>
+      <div class="cv-who">
+        <div class="cv-wcard yes cv-rv">
+          <h3>Perfect if you're…</h3>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>A freelancer tired of competing on ₹5,000 quotes</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>An agency owner who wants premium concepts faster</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>A WordPress/Elementor user who wants 3D-level design</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>A student or beginner building a first portfolio</li>
+          </ul>
+        </div>
+        <div class="cv-wcard no cv-rv cv-d1">
+          <h3>Skip it if you…</h3>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>Want guaranteed income</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>Won't edit or customise anything</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>Expect AI to find clients for you</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. REVIEWS (real only) -->
+  <section class="cv-sec" id="cv-reviews" style="background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+    <div class="cv-wrap">
+      <div class="cv-center cv-rv">
+        <span class="cv-eyebrow"><i></i>From buyers</span>
+        <h2 class="cv-h2">What builders <span class="cv-g">are saying</span></h2>
+      </div>
+      <div data-cv-reviews></div>
+    </div>
+  </section>
+
+  <!-- 10. CREATOR -->
+  <section class="cv-sec">
+    <div class="cv-wrap">
+      <div class="cv-creator cv-rv">
+        <div class="cv-avatar" data-cv-avatar>A</div>
+        <div>
+          <span class="cv-eyebrow"><i></i>Who made this</span>
+          <h3>Hi, I'm Aarav</h3>
+          <p>I run Scalevery Media House, a web design agency building websites for local businesses, and DigiShop365, where I make practical digital tools for Indian freelancers.</p>
+          <p>The Vault is the set of prompts and workflow I use to go from "blank screen" to a premium site a business owner actually wants to pay for.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11. OFFER -->
+  <section class="cv-sec cv-offer-sec" id="cv-offer">
+    <div class="cv-wrap">
+      <div class="cv-center cv-rv">
+        <span class="cv-eyebrow"><i></i>Get instant access</span>
+        <h2 class="cv-h2">Open the <span class="cv-g">Vault</span> today</h2>
+      </div>
+      <div class="cv-offer-wrap">
+      <div class="cv-orbit" aria-hidden="true"><i></i><i></i></div>
+      <div class="cv-offer cv-rv cv-d1">
+        <span class="tag" data-cv-offertag>Launch price</span>
+        <h3>3D Site Vault</h3>
+        <p>The complete premium 3D website kit</p>
+        <ul class="cv-incl">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>30 website concepts + AI prompts</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Elementor 3D master prompt</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Design library, motion ideas &amp; speed checklist</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Client brief sheet + pitch &amp; WhatsApp scripts</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Deploy guide (Elementor, Vercel, Netlify)</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span><b style="color:var(--gold-hi)">BONUS:</b> 4 app UI prompts (calorie tracker, trip planner, recipe, dating)</span></li>
+        </ul>
+        <div class="cv-price"><b data-cv-price>₹299</b><span data-cv-pricenote>one-time payment<br>goes to <span data-cv-after>₹499</span> after launch</span></div>
+        <div data-cv-offercd>
+          <div class="cv-ocd" data-cv-cd><div><b data-u="d">00</b><small>days</small></div><div><b data-u="h">00</b><small>hrs</small></div><div><b data-u="m">00</b><small>min</small></div><div><b data-u="s">00</b><small>sec</small></div></div>
+          <div class="cv-ocd-l">left at launch price</div>
+        </div>
+        <a class="cv-btn cv-btn-p" href="#cv-offer" data-cv-buy>Get Instant Access
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <div class="cv-secure"><span>🔒 Secure checkout via PayU</span><span>UPI · Cards · Netbanking</span><span>Download link by email</span></div>
+        <p class="cv-final-note">Instant digital download, so all sales are final. Not sure? <a href="#cv-sample">Try the free prompt first.</a></p>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12. FAQ -->
+  <section class="cv-sec" id="cv-faq">
+    <div class="cv-wrap">
+      <div class="cv-center cv-rv">
+        <span class="cv-eyebrow"><i></i>FAQ</span>
+        <h2 class="cv-h2">Questions, <span class="cv-g">answered</span></h2>
+      </div>
+      <div class="cv-faq">
+        <details class="cv-rv"><summary>Do I need to know coding?</summary><p>No. You copy a prompt, fill in the business details and paste it into an AI tool. For Elementor, you paste the code it gives you into one HTML widget. You should be comfortable copying, pasting and making small text edits.</p></details>
+        <details class="cv-rv"><summary>Which AI tools does it work with?</summary><p>Claude (free or paid), Claude Code, Lovable, Bolt and ChatGPT. The Elementor prompts work best with Elementor Pro, but most concepts also work on Elementor Free.</p></details>
+        <details class="cv-rv"><summary>What format is the kit in?</summary><p>A downloadable PDF guide plus text files with every prompt, so you can copy them easily on your phone or laptop.</p></details>
+        <details class="cv-rv"><summary>Can I use it for client projects?</summary><p>Yes. Build as many websites as you like for yourself or your clients. You just can't resell or share the kit itself.</p></details>
+        <details class="cv-rv"><summary>Will this guarantee I make money?</summary><p>No. The kit gives you the concepts, prompts and pitch scripts. Getting clients depends on how much you practise and reach out to businesses.</p></details>
+        <details class="cv-rv"><summary>Can I get a refund?</summary><p>Because the kit is an instant digital download, all sales are final. That's why there's a full free prompt on this page: try it first and buy only if you like the result. If your download has a problem, contact us and we'll fix it.</p></details>
+        <details class="cv-rv"><summary>What are the bonus app UI prompts?</summary><p>Four prompts that design complete mobile apps (calorie tracker, AI trip planner, recipe app and dating app) with splash, onboarding, sign-in, main screens, paywall and profile, plus a design system. Paste one into Claude, Lovable or Bolt to get the full screen set as a clickable prototype. They're designs and front-end prototypes, not a finished app on the Play Store.</p></details>
+        <details class="cv-rv"><summary>Why is the price going up?</summary><p>₹299 is the launch price for early buyers. After the countdown ends, the Vault goes to its regular price of ₹499.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13. FINAL CTA -->
+  <section class="cv-final">
+    <div class="cv-wrap cv-rv">
+      <span class="cv-eyebrow"><i></i>Your move</span>
+      <h2 class="cv-h2">Stop sending quotes.<br><span class="cv-g">Send live websites.</span></h2>
+      <p class="cv-lead" style="margin:0 auto">30 website prompts, 4 bonus app prompts and the pitch scripts, for <b data-cv-price style="color:var(--txt)">₹299</b>.</p>
+      <div class="cv-ctas"><a class="cv-btn cv-btn-p" href="#cv-offer" data-cv-buy>Get the Vault · <span data-cv-price>₹299</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+    </div>
+  </section>
+
+  <footer class="cv-foot">
+    <div class="cv-wrap">
+      <div>© <span data-cv-yr>2026</span> DigiShop365 · 3D Site Vault</div>
+      <nav aria-label="Legal"><a href="/privacy-policy/">Privacy Policy</a><a href="/terms-and-conditions/">Terms</a><a href="/refund-policy/">Refund Policy</a><a href="/contact/">Contact</a></nav>
+    </div>
+  </footer>
+
+  <div class="cv-sticky" aria-hidden="true">
+    <div><b data-cv-price>₹299</b><span data-cv-stickynote>launch price ends soon</span></div>
+    <a class="cv-btn cv-btn-p" href="#cv-offer" data-cv-buy tabindex="-1">Get the Vault</a>
+  </div>
+
+  <div class="cv-toast" role="status" aria-live="polite" hidden>
+    <i data-t="ini">R</i>
+    <div><p><b data-t="who">Someone</b> bought <b>3D Site Vault</b></p><small><span data-t="ago"></span> · <em>✓ Verified order</em></small></div>
+    <button type="button" aria-label="Close" data-t="x">×</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  /* =====================================================================
+     EDIT THIS
+     ===================================================================== */
+  var CFG = {
+    checkout: 'https://digishop365.com/checkout/?add-to-cart=PRODUCT_ID', // ← your product ID
+    price: 299,          // launch price (must match WooCommerce)
+    priceAfter: 499,     // REAL price after the deadline (change WooCommerce too)
+    deadline: '2026-10-31T23:59:59+05:30', // ← REAL date the launch price ends (IST)
+
+    /* AI images / video: upload to WordPress Media Library, paste the File URL.
+       Leave '' to keep the built-in coded design. */
+    media: {
+      heroVideo: 'https://digishop365.com/wp-content/uploads/2026/10/Gold_vault_door_opens_1080p_20261023225240-1.mp4',              // 16:9 MP4 (desktop) — replaces the 3D vault
+      heroVideoMobile: 'https://digishop365.com/wp-content/uploads/2026/10/Vault_door_opens_with_light_1080p_20261023225233-1.mp4', // 9:16 MP4 (phones)
+      heroPoster: '',       // still frame shown while video loads (optional)
+      mockup: 'https://digishop365.com/wp-content/uploads/2026/10/Luxury_product_mockup_of_book_2K_20261023221723.jpg',
+      texture: '',          // dark velvet background for the hero (optional)
+      creator: 'https://digishop365.com/wp-content/uploads/2026/05/Same_character_different_studio_and_202605181824-scaled.jpeg'
+    },
+
+    /* Bonus app cards: a short MP4 per app (plays when scrolled into view).
+       Leave video '' to keep the coded phones. */
+    apps: [
+      { name: 'FitFuel',  video: 'https://digishop365.com/wp-content/uploads/2026/10/FitFuel_mobile_app_UI_animation_1080p_20261023224505-1.mp4' },
+      { name: 'TripNest', video: 'https://digishop365.com/wp-content/uploads/2026/10/Animate_TripNest_mobile_app_scre…_1080p_20261023224512-1.mp4' }, // shortened link: found automatically
+      { name: 'Spoonful', video: 'https://digishop365.com/wp-content/uploads/2026/10/Animate_recipe_app_screenshot_1080p_20261023224524-1.mp4' },
+      { name: 'Kindred',  video: 'https://digishop365.com/wp-content/uploads/2026/10/Animate_dating_app_screenshot_an…_1080p_20261023224547-1.mp4' } // shortened link: found automatically
+    ],
+
+    /* Gallery cards. img = image, demo = live link.
+       real: false → labelled "concept preview" (use for AI mockups).
+       real: true  → only for screenshots of sites you actually built with the kit. */
+    gallery: [
+      { no: '#01', niche: 'Dental clinic',   url: 'auradental.in',    head: 'Smile, redesigned',         cta: 'Book a visit',    c1: '#19D3C5', c2: '#0B5F59', real: false, demo: '',
+        img: 'https://digishop365.com/wp-content/uploads/2026/10/Dental_clinic_website_homepage_m…_2K_20261023223225-scaled.jpg' }, // shortened link: found automatically
+      { no: '#07', niche: 'Jewellery store', url: 'suvarnajewels.in', head: 'Gold that tells your story', cta: 'View collection', c1: '#E2B04A', c2: '#6B4300', real: false, demo: '',
+        img: 'https://digishop365.com/wp-content/uploads/2026/10/Luxury_jewellery_website_mockup_2K_20261023223228-scaled.jpg' },
+      { no: '#12', niche: 'Gym & fitness',   url: 'ironpeak.fit',     head: 'Train like you mean it',    cta: 'Free trial',      c1: '#FF7A1A', c2: '#7A2A00', real: false, demo: '',
+        img: 'https://digishop365.com/wp-content/uploads/2026/10/Fitness_website_mockup_3D_design_2K_20261023223234-scaled.jpg' },
+      { no: '#21', niche: 'Coaching class',  url: 'apexacademy.in',   head: 'Crack it in one attempt',   cta: 'Book demo class', c1: '#7C8CFF', c2: '#24307A', real: false, demo: '',
+        img: 'https://digishop365.com/wp-content/uploads/2026/10/Website_mockup_for_educational_i…_2K_20261023223235-scaled.jpg' }, // shortened link: found automatically
+      { no: '#16', niche: 'Restaurant',      url: 'tandoorhouse.in',  head: 'Fire, spice & family',      cta: 'Reserve a table', c1: '#FF4D4D', c2: '#6E0F0F', real: false, demo: '',
+        img: 'https://digishop365.com/wp-content/uploads/2026/10/Luxury_restaurant_website_mockup_2K_20261023223254-scaled.jpg' },
+      { no: '#25', niche: 'Salon & spa',     url: 'velvetstudio.in',  head: 'Your hour of calm',         cta: 'Book appointment',c1: '#F28FC4', c2: '#6B1F4A', real: false, demo: '',
+        img: 'https://digishop365.com/wp-content/uploads/2026/10/Luxury_salon_website_mockup_2K_20261023223239-scaled.jpg' }
+    ],
+
+    /* REAL buyer reviews only. Example:
+       { name: 'Rohit', city: 'Pune', text: 'Built my first gym site in an evening…', stars: 5, img: '' } */
+    reviews: [],
+
+    /* Social proof screenshots (auto-scrolling carousel). Real customer screenshots only;
+       blur phone numbers / emails before uploading. Any shape works. */
+    /* "Drag to compare" slider: two images, same size (16:9). */
+    compare: {
+      before: 'https://digishop365.com/wp-content/uploads/2026/10/Jewellery_website_mockup_prompt_2K_20261023235548-scaled.jpg',
+      after:  'https://digishop365.com/wp-content/uploads/2026/10/Luxury_jewellery_website_mockup_2K_20261023223228-scaled.jpg'
+    },
+
+    proofs: [
+      'https://digishop365.com/wp-content/uploads/2026/10/6-2026-14-09-06-46-51.png',
+      'https://digishop365.com/wp-content/uploads/2026/10/7-2026-14-09-06-46-42.png',
+      'https://digishop365.com/wp-content/uploads/2026/10/51-2026-14-09-06-46-30-1-scaled.png',
+      'https://digishop365.com/wp-content/uploads/2026/10/51-2026-14-09-06-46-30-scaled.png',
+      'https://digishop365.com/wp-content/uploads/2026/10/profile_pic_1815902_a6daad4a-bc7b-4041-9bd5-941204bb5392-1.png'
+    ],
+
+    /* REAL recent orders only (first name + city from WooCommerce → Orders).
+       Example: { name: 'Priya', city: 'Nagpur', time: '2026-10-24T18:40:00+05:30' } */
+    buyers: []
+  };
+  /* ===================================================================== */
+
+  var root = document.getElementById('cv');
+  if (!root || root.getAttribute('data-ready')) return;
+  root.setAttribute('data-ready', '1');
+  root.classList.add('cv-js');
+
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  var $ = function (s, c) { return (c || root).querySelector(s); };
+  var $$ = function (s, c) { return Array.prototype.slice.call((c || root).querySelectorAll(s)); };
+  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  var safeUrl = function (u) { u = String(u || '').trim(); return /^https?:\/\//i.test(u) || u.charAt(0) === '/' ? u : ''; };
+  /* Links copied from the Media Library list are shortened with "…" and don't work.
+     This finds the real file through WordPress's media search using the timestamp in the name. */
+  var CUT = /…|\.\.\./, lookups = {};
+  function resolveMedia(u, cb) {
+    u = String(u || '').trim();
+    if (!CUT.test(u)) { cb(safeUrl(u)); return; }
+    var stamp = (u.match(/(\d{14})/) || [])[1], tail = u.split(CUT).pop();
+    if (!stamp || !window.fetch) { cb(''); return; }
+    var origin; try { origin = new URL(u.replace(/…/g, 'x')).origin; } catch (e) { origin = location.origin; }
+    if (!lookups[u]) lookups[u] = fetch(origin + '/wp-json/wp/v2/media?search=' + stamp + '&per_page=20&_fields=source_url', { credentials: 'omit' })
+      .then(function (r) { return r.ok ? r.json() : []; })
+      .then(function (list) {
+        var hit = '', alt = '';
+        (Array.isArray(list) ? list : []).forEach(function (m) { var s = (m && m.source_url) || '';
+          if (!hit && tail && s.slice(-tail.length) === tail) hit = s;
+          if (!alt && s.indexOf(stamp) > -1 && s.split('.').pop() === tail.split('.').pop()) alt = s; });
+        return safeUrl(hit || alt);
+      }).catch(function () { return ''; });
+    lookups[u].then(cb);
+  }
+  var rupee = function (n) { return '₹' + Number(n).toLocaleString('en-IN'); };
+
+  /* ---------- checkout links ---------- */
+  if (CFG.checkout.indexOf('PRODUCT_ID') === -1) $$('[data-cv-buy]').forEach(function (a) { a.href = CFG.checkout; });
+  $$('[data-cv-yr]').forEach(function (el) { el.textContent = new Date().getFullYear(); });
+
+  /* ---------- media slots ---------- */
+  var M = CFG.media || {};
+  if (safeUrl(M.texture)) $('.cv-hero').style.setProperty('--cv-texture', 'url("' + safeUrl(M.texture) + '")');
+  if (safeUrl(M.heroVideo)) {
+    var vis = $('.cv-visual');
+    var small = window.innerWidth < 760, src = safeUrl(small && M.heroVideoMobile ? M.heroVideoMobile : M.heroVideo);
+    /* vault video becomes the full hero BACKGROUND, text sits on top */
+    var heroEl = $('.cv-hero'), bg = document.createElement('div');
+    bg.className = 'cv-hero-bg'; bg.setAttribute('aria-hidden', 'true');
+    bg.innerHTML = '<video autoplay muted loop playsinline preload="auto"' + (safeUrl(M.heroPoster) ? ' poster="' + esc(safeUrl(M.heroPoster)) + '"' : '') + '><source src="' + esc(src) + '" type="video/mp4"></video>';
+    heroEl.insertBefore(bg, heroEl.firstChild);
+    heroEl.classList.add('cv-hero--video');
+    vis.parentNode.removeChild(vis);
+    var hv = $('video', bg);
+    if (hv && 'IntersectionObserver' in window) new IntersectionObserver(function (es) { if (es[0].isIntersecting) { var pr = hv.play(); if (pr && pr.catch) pr.catch(function () {}); } else hv.pause(); }).observe(heroEl);
+  } else if (safeUrl(M.heroPoster)) {
+    $('.cv-visual').innerHTML = '<div class="cv-video"><img src="' + esc(safeUrl(M.heroPoster)) + '" alt="" style="width:100%;height:100%;object-fit:cover"></div>';
+  }
+  if (safeUrl(M.mockup)) $('[data-cv-mockup]').innerHTML = '<img src="' + esc(safeUrl(M.mockup)) + '" alt="3D Site Vault kit" loading="lazy">';
+  if (safeUrl(M.creator)) { var av = $('[data-cv-avatar]'); av.textContent = ''; av.innerHTML = '<img src="' + esc(safeUrl(M.creator)) + '" alt="Aarav, creator of 3D Site Vault" loading="lazy">'; }
+
+  /* ---------- bonus app videos (play only while visible) ---------- */
+  var appStages = $$('.cv-app-stage'), an = $('[data-cv-appnote]');
+  var vio = 'IntersectionObserver' in window ? new IntersectionObserver(function (es) {
+    es.forEach(function (e) { var vd = e.target.querySelector('video'); if (!vd) return;
+      if (e.isIntersecting) { var pr = vd.play(); if (pr && pr.catch) pr.catch(function () {}); } else vd.pause(); });
+  }, { threshold: 0.25 }) : null;
+  (CFG.apps || []).forEach(function (a, i) {
+    var st = appStages[i];
+    if (!st || !a || !a.video) return;
+    resolveMedia(a.video, function (v) {
+      if (!v) return;
+      st.innerHTML = '<video muted loop playsinline preload="none" aria-label="' + esc(a.name) + ' app design preview"><source src="' + esc(v) + '" type="video/mp4"></video>';
+      st.classList.add('has-video');
+      if (vio) vio.observe(st); else { var vd = $('video', st); vd.autoplay = true; vd.play(); }
+      if (an) an.textContent = 'Concept previews, animated. Each prompt generates a full multi-screen app design in Claude, Lovable or Bolt.';
+    });
+  });
+
+  /* ---------- gallery ---------- */
+  var gal = $('[data-cv-gallery]'), anyPreview = false;
+  (CFG.gallery || []).forEach(function (g, i) {
+    var img = CUT.test(String(g.img || '')) ? '' : safeUrl(g.img), demo = safeUrl(g.demo), real = !!(img && g.real === true);
+    if (!real) anyPreview = true;
+    var shot = img
+      ? '<img src="' + esc(img) + '" alt="' + esc(g.niche) + ' website ' + (real ? 'built with' : 'concept for') + ' prompt ' + esc(g.no) + '" loading="lazy">'
+      : '<div class="cv-site" style="--c1:' + esc(g.c1) + ';--c2:' + esc(g.c2) + '"><div class="cv-sbar"><i></i><i></i><i></i><span>' + esc(g.url) + '</span></div><div class="cv-sbody"><div><b>' + esc(g.head) + '</b><em></em><em></em><u>' + esc(g.cta) + '</u></div><div class="cv-orb"></div></div></div>';
+    var card = document.createElement('article');
+    card.className = 'cv-gcard cv-rv' + (i % 3 ? ' cv-d' + (i % 3) : '');
+    card.innerHTML = '<div class="cv-gshot">' + shot + '</div><div class="cv-gmeta"><div><b>' + esc(g.niche) + '</b><small>Prompt ' + esc(g.no) + (real ? '' : ' · concept preview') + '</small></div>' +
+      (demo ? '<a href="' + esc(demo) + '" target="_blank" rel="noopener">Live demo ↗</a>' : '') + '</div>';
+    gal.appendChild(card);
+    if (!img && CUT.test(String(g.img || ''))) resolveMedia(g.img, function (u) {
+      if (u) $('.cv-gshot', card).innerHTML = '<img src="' + esc(u) + '" alt="' + esc(g.niche) + ' website concept for prompt ' + esc(g.no) + '" loading="lazy">';
+    });
+  });
+  $('[data-cv-galnote]').textContent = anyPreview ? 'Concept previews show the style each prompt is designed to produce.' : 'Real sites built with prompts from the Vault.';
+
+  /* ---------- reviews (real only) ---------- */
+  var rv = $('[data-cv-reviews]'), R = CFG.reviews || [];
+  if (R.length) {
+    rv.className = 'cv-revs';
+    R.forEach(function (r) {
+      var el = document.createElement('div'); el.className = 'cv-rev cv-rv';
+      var n = Math.max(1, Math.min(5, parseInt(r.stars, 10) || 5));
+      el.innerHTML = '<div class="st">' + '★★★★★'.slice(0, n) + '</div>' + (safeUrl(r.img) ? '<img src="' + esc(safeUrl(r.img)) + '" alt="Screenshot shared by ' + esc(r.name) + '" loading="lazy">' : '') +
+        '<p>' + esc(r.text) + '</p><div class="who"><i>' + esc((r.name || '?').charAt(0).toUpperCase()) + '</i><div><b>' + esc(r.name) + '</b><small>' + esc(r.city || '') + '</small></div></div>';
+      rv.appendChild(el);
+    });
+  } else if (!(CFG.proofs || []).length) {
+    rv.innerHTML = '<div class="cv-launch cv-rv"><div class="big">🚀 Launch week</div><p>The Vault just opened, so reviews from the first buyers will appear here. Bought it already? Send us the first site you build and we\'ll feature the best ones.</p></div>';
+  }
+
+  /* ---------- social proof carousel (auto-scrolls, keeps every image's own shape) ---------- */
+  var PR = (CFG.proofs || []).map(safeUrl).filter(Boolean);
+  if (PR.length) {
+    var revSec = $('#cv-reviews'), eb = $('.cv-eyebrow', revSec), h2r = $('.cv-h2', revSec);
+    if (eb) eb.innerHTML = '<i></i>Customer love';
+    if (h2r) h2r.innerHTML = 'What our customers <span class="cv-g">are saying</span>';
+    var pw = document.createElement('div'); pw.className = 'cv-proof';
+    var track = document.createElement('div'); track.className = 'cv-ptrack'; pw.appendChild(track);
+    for (var set = 0; set < 3; set++) PR.forEach(function (u, i) {
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'cv-proofcard';
+      if (set) { b.setAttribute('aria-hidden', 'true'); b.tabIndex = -1; } else b.setAttribute('aria-label', 'Enlarge customer screenshot ' + (i + 1));
+      b.innerHTML = '<img src="' + esc(u) + '" alt="' + (set ? '' : 'Customer screenshot ' + (i + 1)) + '" decoding="async">';
+      b.firstChild.onerror = function () { if (b.parentNode) b.parentNode.removeChild(b); };
+      b.addEventListener('click', function () { openLb(u); });
+      track.appendChild(b);
+    });
+    rv.parentNode.insertBefore(pw, rv);
+    var pn = document.createElement('p'); pn.className = 'cv-gnote'; pn.textContent = 'Shared by DigiShop365 customers. Tap any card to enlarge.';
+    pw.parentNode.insertBefore(pn, rv);
+
+    /* lightbox */
+    var lb = document.createElement('div'); lb.className = 'cv-lb'; lb.setAttribute('role', 'dialog'); lb.setAttribute('aria-modal', 'true'); lb.setAttribute('aria-label', 'Customer screenshot');
+    lb.innerHTML = '<button type="button" aria-label="Close">×</button><img alt="Customer screenshot, enlarged">';
+    root.appendChild(lb);
+    var lbClose = function () { lb.classList.remove('on'); };
+    function openLb(u) { $('img', lb).src = u; lb.classList.add('on'); $('button', lb).focus(); }
+    lb.addEventListener('click', function (e) { if (e.target !== $('img', lb)) lbClose(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') lbClose(); });
+
+    /* auto-scroll: pauses on hover/touch and when off-screen */
+    if (reduce) { pw.style.overflowX = 'auto'; }
+    else {
+      var px = 0, pPaused = false, pVis = true, resumeT;
+      pw.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') pPaused = true; });
+      pw.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') pPaused = false; });
+      pw.addEventListener('touchstart', function () { pPaused = true; clearTimeout(resumeT); }, { passive: true });
+      pw.addEventListener('touchend', function () { resumeT = setTimeout(function () { pPaused = false; }, 1800); }, { passive: true });
+      if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { pVis = es[0].isIntersecting; }).observe(pw);
+      (function pLoop() {
+        requestAnimationFrame(pLoop);
+        if (!pVis || pPaused || document.hidden) return;
+        var setW = track.scrollWidth / 3;
+        px -= window.innerWidth < 760 ? 0.55 : 0.75;
+        if (setW > 0 && -px >= setW) px += setW;
+        track.style.transform = 'translate3d(' + px.toFixed(2) + 'px,0,0)';
+      })();
+    }
+  }
+
+  /* ---------- prepare motion: 3D cards + word-flip headings ---------- */
+  $$('.cv-gcard,.cv-app,.cv-pcard,.cv-tile,.cv-mcard,.cv-wcard,.cv-rev,.cv-offer,.cv-code,.cv-ba,.cv-creator,.cv-launch').forEach(function (el, i) {
+    el.setAttribute('data-cv-3d', ''); el.classList.remove('cv-rv'); el._dir = i % 2 ? -1 : 1; el._hx = 0; el._hy = 0;
+  });
+  function splitWords(el) {
+    var i = 0;
+    (function walk(node, gold) {
+      Array.prototype.slice.call(node.childNodes).forEach(function (n) {
+        if (n.nodeType === 3) {
+          var frag = document.createDocumentFragment();
+          n.textContent.split(/(\s+)/).forEach(function (p) {
+            if (!p) return;
+            if (/^\s+$/.test(p)) { frag.appendChild(document.createTextNode(p)); return; }
+            var w = document.createElement('span'), s = document.createElement('span');
+            w.className = 'cv-w'; s.textContent = p; s.style.setProperty('--i', i++); if (gold) s.className = 'cv-g';
+            w.appendChild(s); frag.appendChild(w);
+          });
+          n.parentNode.replaceChild(frag, n);
+        } else if (n.nodeType === 1 && n.tagName !== 'BR') {
+          var g = gold || n.classList.contains('cv-g'); if (n.classList.contains('cv-g')) n.classList.remove('cv-g');
+          walk(n, g);
+        }
+      });
+    })(el, false);
+  }
+  $$('.cv-h1,.cv-h2').forEach(splitWords);
+  requestAnimationFrame(function () { requestAnimationFrame(function () { root.classList.add('cv-loaded'); }); });
+
+  /* ---------- reveal on scroll ---------- */
+  var rvs = $$('.cv-rv');
+  if (reduce || !('IntersectionObserver' in window)) rvs.forEach(function (el) { el.classList.add('in'); });
+  else {
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }); },
+      { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    rvs.forEach(function (el) { io.observe(el); });
+  }
+
+  /* ---------- countdown to the REAL deadline ---------- */
+  var end = new Date(CFG.deadline).getTime(), ended = false;
+  function setPrices(after) {
+    var p = after ? CFG.priceAfter : CFG.price;
+    $$('[data-cv-price]').forEach(function (el) { el.textContent = rupee(p); });
+    if (after) {
+      $$('[data-cv-pricenote]').forEach(function (el) { el.textContent = 'one-time payment'; });
+      $$('[data-cv-bar-live]').forEach(function (el) { el.hidden = true; });
+      var be = $('[data-cv-bar-ended]'); if (be) { be.hidden = false; $('[data-cv-now]').textContent = Number(CFG.priceAfter).toLocaleString('en-IN'); }
+      $$('[data-cv-cd]').forEach(function (el) { el.hidden = true; });
+      var oc = $('[data-cv-offercd]'); if (oc) oc.hidden = true;
+      var ot = $('[data-cv-offertag]'); if (ot) ot.textContent = 'Instant access';
+      var sn = $('[data-cv-stickynote]'); if (sn) sn.textContent = 'instant download';
+      $$('.cv-faq details').forEach(function (d) { if (/price going up/i.test(d.textContent)) d.hidden = true; });
+    } else {
+      $$('[data-cv-after]').forEach(function (el) { el.textContent = rupee(CFG.priceAfter); });
+    }
+  }
+  var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+  function tick() {
+    var left = end - Date.now();
+    if (!(left > 0)) { if (!ended) { ended = true; setPrices(true); } return; }
+    var s = Math.floor(left / 1000), d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60), sec = s % 60;
+    $$('[data-cv-cd] [data-u]').forEach(function (el) { var u = el.getAttribute('data-u'); el.textContent = pad(u === 'd' ? d : u === 'h' ? h : u === 'm' ? m : sec); });
+    var sn = $('[data-cv-stickynote]'); if (sn) sn.textContent = d > 0 ? 'launch price · ' + d + 'd ' + h + 'h left' : 'launch price · ' + h + 'h ' + m + 'm left';
+  }
+  if (isNaN(end)) { setPrices(false); $$('[data-cv-cd]').forEach(function (el) { el.hidden = true; }); }
+  else { setPrices(Date.now() >= end); tick(); setInterval(tick, 1000); }
+
+  /* ---------- hero 3D tilt ---------- */
+  var stage = $('[data-cv-stage]'), hero = $('.cv-hero');
+  if (stage && fine && !reduce) {
+    var tx = 0, ty = 0, cx = 0, cy = 0, raf = null;
+    var loop = function () { cx += (tx - cx) * .08; cy += (ty - cy) * .08; stage.style.setProperty('--ry', (-16 + cx * 16).toFixed(2) + 'deg'); stage.style.setProperty('--rx', (8 - cy * 10).toFixed(2) + 'deg');
+      raf = (Math.abs(tx - cx) + Math.abs(ty - cy) > .001) ? requestAnimationFrame(loop) : null; };
+    hero.addEventListener('pointermove', function (e) { var r = hero.getBoundingClientRect(); tx = (e.clientX - r.left) / r.width - .5; ty = (e.clientY - r.top) / r.height - .5; if (!raf) raf = requestAnimationFrame(loop); });
+    hero.addEventListener('pointerleave', function () { tx = 0; ty = 0; if (!raf) raf = requestAnimationFrame(loop); });
+  }
+
+  /* ---------- motion engine: 3D card entrances, marquee, dust, glow, progress ---------- */
+  var els3d = $$('[data-cv-3d]');
+  function apply3d(el, vh) {
+    var r = el.getBoundingClientRect();
+    if (r.bottom < -300 || r.top > vh + 300) return;
+    var q = Math.max(0, Math.min(1, (vh * 1.02 - r.top) / (vh * 0.5))), e = reduce ? 1 : 1 - Math.pow(1 - q, 3);
+    var rx = (1 - e) * 30 + el._hx, ry = (1 - e) * el._dir * 12 + el._hy;
+    el.style.transform = 'perspective(1100px) translate3d(0,' + ((1 - e) * 70).toFixed(1) + 'px,0) rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg) scale(' + (0.92 + 0.08 * e).toFixed(3) + ')';
+    el.style.opacity = (0.12 + 0.88 * e).toFixed(3);
+  }
+  if (fine && !reduce) {
+    els3d.forEach(function (c) {
+      c.addEventListener('pointermove', function (e) {
+        var r = c.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+        var big = r.height > 360 ? 0.45 : 1;
+        c._hx = (.5 - y) * 7 * big; c._hy = (x - .5) * 9 * big;
+        c.style.setProperty('--mx', (x * 100) + '%'); c.style.setProperty('--my', (y * 100) + '%');
+        apply3d(c, window.innerHeight);
+      });
+      c.addEventListener('pointerleave', function () { c._hx = 0; c._hy = 0; apply3d(c, window.innerHeight); });
+    });
+    /* magnetic primary buttons */
+    $$('.cv-btn-p').forEach(function (b) {
+      if (b.closest('.cv-sticky')) return;
+      b.addEventListener('pointermove', function (e) { var r = b.getBoundingClientRect();
+        b.style.transform = 'translate(' + ((e.clientX - r.left - r.width / 2) * .16).toFixed(1) + 'px,' + ((e.clientY - r.top - r.height / 2) * .3 - 2).toFixed(1) + 'px)'; });
+      b.addEventListener('pointerleave', function () { b.style.transform = ''; });
+    });
+  }
+
+  /* marquee rows (duplicated for a seamless loop) */
+  var rows = $$('.cv-mrow');
+  rows.forEach(function (r) { r.innerHTML += r.innerHTML; });
+  var mq = $('.cv-marq'), mqOn = true;
+  if ('IntersectionObserver' in window && mq) new IntersectionObserver(function (es) { mqOn = es[0].isIntersecting; }).observe(mq);
+
+  /* gold dust: depth particles that drift and parallax with scroll */
+  var dust = $('.cv-dust'), dctx = dust && dust.getContext ? dust.getContext('2d') : null, P = [], DW = 0, DH = 0, ddpr = Math.min(window.devicePixelRatio || 1, 1.5);
+  function sizeDust() {
+    if (!dctx) return;
+    DW = window.innerWidth; DH = window.innerHeight; dust.width = DW * ddpr; dust.height = DH * ddpr; dctx.setTransform(ddpr, 0, 0, ddpr, 0, 0);
+    var n = reduce ? 0 : (DW < 760 ? 36 : 80); P = [];
+    for (var i = 0; i < n; i++) P.push({ x: Math.random() * DW, y: Math.random() * DH * 3, z: Math.random(), r: Math.random() * 1.4 + .5, vx: (Math.random() - .5) * .12, vy: -(Math.random() * .18 + .04), tw: Math.random() * 6.28 });
+  }
+  function drawDust(y, t) {
+    if (!dctx || !P.length) return;
+    dctx.clearRect(0, 0, DW, DH);
+    for (var i = 0; i < P.length; i++) {
+      var p = P[i]; p.x += p.vx; p.y += p.vy;
+      if (p.x < -10) p.x = DW + 10; if (p.x > DW + 10) p.x = -10;
+      var span = DH + 40, sy = ((p.y - y * (0.12 + p.z * 0.55)) % span + span) % span - 20;
+      var a = (0.18 + 0.6 * p.z) * (0.6 + 0.4 * Math.sin(t * 0.002 + p.tw));
+      dctx.beginPath(); dctx.arc(p.x, sy, p.r * (0.6 + p.z * 1.4), 0, 6.283);
+      dctx.fillStyle = (i % 5 === 0 ? 'rgba(255,143,171,' : 'rgba(245,210,122,') + a.toFixed(3) + ')'; dctx.fill();
+    }
+  }
+  sizeDust(); window.addEventListener('resize', sizeDust);
+
+  /* cursor glow */
+  var glow = $('.cv-glow'), gx = -999, gy = -999, cgx = -999, cgy = -999;
+  if (fine && !reduce && glow) {
+    window.addEventListener('pointermove', function (e) { gx = e.clientX; gy = e.clientY; if (cgx < -900) { cgx = gx; cgy = gy; } glow.classList.add('on'); }, { passive: true });
+    document.addEventListener('pointerleave', function () { glow.classList.remove('on'); });
+  }
+
+  /* count-up */
+  var cnt = $('[data-cv-count]');
+  if (cnt && !reduce && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function (es, ob) {
+      if (!es[0].isIntersecting) return; ob.disconnect(); var t0 = performance.now();
+      (function step(t) { var k = Math.min(1, (t - t0) / 1400), e = 1 - Math.pow(1 - k, 3);
+        cnt.textContent = '₹' + Math.max(1, Math.round(10 * e)) + 'K–' + Math.max(5, Math.round(50 * e)) + 'K+'; if (k < 1) requestAnimationFrame(step); })(t0);
+    }, { threshold: .6 }).observe(cnt);
+  }
+
+  var prog = $('.cv-prog'), lastY = -1, vel = 0, mqx = 0, frames = 0;
+  window.addEventListener('resize', function () { frames = 0; });
+  (function frame(t) {
+    requestAnimationFrame(frame);
+    if (document.hidden) return;
+    var y = window.scrollY, vh = window.innerHeight, dy = lastY < 0 ? 0 : y - lastY;
+    lastY = y; vel += (dy - vel) * 0.12;
+    if (prog) { var mx = document.documentElement.scrollHeight - vh; prog.style.transform = 'scaleX(' + (mx > 0 ? Math.min(1, y / mx) : 0).toFixed(4) + ')'; }
+    if (dy !== 0 || frames < 4) els3d.forEach(function (el) { apply3d(el, vh); });
+    frames++;
+    if (!reduce && mqOn && rows.length) {
+      mqx += 0.7 + Math.min(14, Math.abs(vel) * 0.45);
+      var sk = Math.max(-10, Math.min(10, -vel * 0.3)).toFixed(2);
+      rows.forEach(function (r, i) { var w = r.scrollWidth / 2 || 1, x = mqx % w;
+        r.style.transform = 'translate3d(' + (i ? x - w : -x).toFixed(1) + 'px,0,0) skewX(' + sk + 'deg)'; });
+    }
+    drawDust(y, t || 0);
+    if (glow && cgx > -900) { cgx += (gx - cgx) * 0.12; cgy += (gy - cgy) * 0.12; glow.style.transform = 'translate3d(' + cgx.toFixed(1) + 'px,' + cgy.toFixed(1) + 'px,0)'; }
+  })();
+
+  /* ---------- before / after slider ---------- */
+  var ba = $('[data-cv-ba]');
+  if (ba) {
+    /* swap the coded mock-ups for your two images (same size, 16:9) */
+    var CMP = CFG.compare || {};
+    if (CMP.before && CMP.after) {
+      var got = {}, swap = function () {
+        if (!got.before || !got.after) return;
+        ['before', 'after'].forEach(function (k) {
+          var layer = $('.cv-ba-' + k, ba), tag = $('.cv-ba-tag', layer);
+          layer.innerHTML = ''; layer.appendChild(tag);
+          var im = document.createElement('img'); im.className = 'cv-ba-img'; im.src = got[k]; im.alt = k === 'before' ? 'Jewellery website from a typical prompt' : 'Jewellery website from Vault prompt #07';
+          im.decoding = 'async'; layer.insertBefore(im, tag);
+        });
+        ba.classList.add('has-img');
+      };
+      resolveMedia(CMP.before, function (u) { got.before = u; swap(); });
+      resolveMedia(CMP.after, function (u) { got.after = u; swap(); });
+    }
+    var rng = $('input', ba);
+    var setPos = function () { ba.style.setProperty('--pos', rng.value + '%'); };
+    rng.addEventListener('input', setPos); setPos();
+    if (!reduce && 'IntersectionObserver' in window) {
+      var hinted = false;
+      new IntersectionObserver(function (es, ob) {
+        if (!es[0].isIntersecting || hinted) return; hinted = true; ob.disconnect();
+        var t0 = performance.now();
+        (function an(t) { var k = Math.min(1, (t - t0) / 1600); rng.value = 50 + Math.sin(k * Math.PI * 2) * 22; setPos(); if (k < 1) requestAnimationFrame(an); else { rng.value = 50; setPos(); } })(t0);
+      }, { threshold: .5 }).observe(ba);
+    }
+  }
+
+  /* ---------- copy sample prompt ---------- */
+  var cb = $('[data-cv-copy]'), pre = $('[data-cv-prompt]');
+  if (cb && pre) cb.addEventListener('click', function () {
+    var txt = pre.innerText, done = function () { cb.textContent = 'Copied ✓'; setTimeout(function () { cb.textContent = 'Copy prompt'; }, 2200); };
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(txt).then(done, fallback); else fallback();
+    function fallback() { var ta = document.createElement('textarea'); ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); done(); } catch (e) {} document.body.removeChild(ta); }
+  });
+
+  /* ---------- sticky mobile bar ---------- */
+  var sticky = $('.cv-sticky'), offer = $('#cv-offer'), ticking = false;
+  function onScroll() {
+    ticking = false; if (!sticky) return;
+    var past = hero.getBoundingClientRect().bottom < 0, or = offer.getBoundingClientRect(), atOffer = or.top < window.innerHeight && or.bottom > 0;
+    sticky.classList.toggle('show', past && !atOffer);
+  }
+  window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
+  onScroll();
+
+  /* ---------- purchase toast: REAL orders only, last 14 days ---------- */
+  var toast = $('.cv-toast'), B = (CFG.buyers || []).filter(function (b) { var t = new Date(b.time).getTime(); return b.name && !isNaN(t) && Date.now() - t < 14 * 864e5 && t <= Date.now(); });
+  B.sort(function (a, b) { return new Date(b.time) - new Date(a.time); });
+  if (toast && B.length) {
+    toast.hidden = false;
+    var idx = 0, shown = 0, closed = false, timer;
+    var ago = function (t) { var m = Math.max(1, Math.round((Date.now() - new Date(t).getTime()) / 60000));
+      return m < 60 ? m + ' min ago' : m < 1440 ? Math.round(m / 60) + (Math.round(m / 60) === 1 ? ' hour ago' : ' hours ago') : Math.round(m / 1440) + (Math.round(m / 1440) === 1 ? ' day ago' : ' days ago'); };
+    var show = function () {
+      if (closed || shown >= Math.min(B.length, 6)) return;
+      var b = B[idx % B.length]; idx++; shown++;
+      $('[data-t="ini"]', toast).textContent = b.name.charAt(0).toUpperCase();
+      $('[data-t="who"]', toast).textContent = b.name + (b.city ? ' from ' + b.city : '');
+      $('[data-t="ago"]', toast).textContent = ago(b.time);
+      toast.classList.add('show');
+      timer = setTimeout(function () { toast.classList.remove('show'); timer = setTimeout(show, 16000); }, 5500);
+    };
+    $('[data-t="x"]', toast).addEventListener('click', function () { closed = true; clearTimeout(timer); toast.classList.remove('show'); });
+    setTimeout(show, 9000);
+  }
+})();
+</script>
+
+<!-- ===== Hero 3D: gold vault that unlocks, opens and releases website screens ===== -->
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+
+const root = document.getElementById('cv');
+const cv = root && root.querySelector('.cv-vault');
+if (cv && !cv.dataset.init) {
+  cv.dataset.init = '1';
+  try { start(); } catch (e) { console.warn('[3D Site Vault] hero 3D off:', e); }
+}
+
+function start() {
+  const box = cv.parentElement, hero = root.querySelector('.cv-hero');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const small = innerWidth < 760;
+
+  const renderer = new THREE.WebGLRenderer({ canvas: cv, antialias: true, alpha: true, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, small ? 1.5 : 1.75));
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.15;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
+  camera.position.set(0, 0, 10);
+
+  /* warm studio + cherry bounce for reflections (built in code) */
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  const env = new THREE.Scene();
+  env.add(new THREE.Mesh(new THREE.BoxGeometry(10, 10, 10), new THREE.MeshBasicMaterial({ color: 0x2a0d15, side: THREE.BackSide })));
+  [[0, 4.9, 0, Math.PI / 2, 0, [3.6, 3.2, 2.6], 6, 3], [4.9, 1, 0, 0, -Math.PI / 2, [2.8, 2.4, 1.9], 4, 3],
+   [-4.9, 0, 1.5, 0, Math.PI / 2, [2.4, 0.7, 1.1], 4, 2.5], [0, 1.5, 4.9, 0, Math.PI, [2.6, 2.3, 2.0], 4, 1.6]].forEach(([x, y, z, rx, ry, c, w, h]) => {
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(c[0], c[1], c[2]), side: THREE.DoubleSide }));
+    m.position.set(x, y, z); m.rotation.set(rx, ry, 0); env.add(m);
+  });
+  scene.environment = pmrem.fromScene(env, 0.04).texture;
+  scene.add(new THREE.HemisphereLight(0xffeedd, 0x2a0d15, 1.0));
+  const key = new THREE.DirectionalLight(0xfff1d6, 2.6); key.position.set(3, 5, 6); scene.add(key);
+  const rim = new THREE.DirectionalLight(0xff8fab, 1.3); rim.position.set(-5, 2, -4); scene.add(rim);
+
+  /* materials */
+  const gold = new THREE.MeshPhysicalMaterial({ color: 0xe2b04a, metalness: 1, roughness: 0.22, clearcoat: 0.4, clearcoatRoughness: 0.2, envMapIntensity: 1.3 });
+  const goldDark = new THREE.MeshPhysicalMaterial({ color: 0xa47a2c, metalness: 1, roughness: 0.34, envMapIntensity: 1.1 });
+  const cherry = new THREE.MeshPhysicalMaterial({ color: 0x5a1a2c, metalness: 0.75, roughness: 0.3, clearcoat: 0.7, clearcoatRoughness: 0.15, envMapIntensity: 1.0 });
+  const inner = new THREE.MeshStandardMaterial({ color: 0x1e0910, metalness: 0.6, roughness: 0.5, side: THREE.BackSide });
+  const mk = (geo, mat, p, r) => { const m = new THREE.Mesh(geo, mat); if (p) m.position.set(p[0], p[1], p[2]); if (r) m.rotation.set(r[0], r[1], r[2]); return m; };
+  const RX = [Math.PI / 2, 0, 0];
+
+  const group = new THREE.Group(); scene.add(group);
+  const vault = new THREE.Group(); group.add(vault);
+
+  /* frame */
+  const ring = new THREE.Shape(); ring.absarc(0, 0, 1.3, 0, Math.PI * 2, false);
+  const hole = new THREE.Path(); hole.absarc(0, 0, 1.0, 0, Math.PI * 2, true); ring.holes.push(hole);
+  const fg = new THREE.ExtrudeGeometry(ring, { depth: 0.34, bevelEnabled: true, bevelThickness: 0.03, bevelSize: 0.03, bevelSegments: 3, curveSegments: 72 }); fg.translate(0, 0, -0.2);
+  vault.add(new THREE.Mesh(fg, cherry));
+  vault.add(mk(new THREE.TorusGeometry(1.02, 0.035, 20, 120), gold, [0, 0, 0.17]));
+  vault.add(mk(new THREE.TorusGeometry(1.31, 0.03, 20, 120), goldDark, [0, 0, 0.13]));
+  const rivet = new THREE.CylinderGeometry(0.035, 0.035, 0.04, 16);
+  for (let i = 0; i < 20; i++) { const a = i / 20 * Math.PI * 2; vault.add(mk(rivet, gold, [Math.cos(a) * 1.17, Math.sin(a) * 1.17, 0.17], RX)); }
+  [0.55, -0.55].forEach((y) => vault.add(mk(new THREE.CylinderGeometry(0.075, 0.075, 0.32, 24), goldDark, [-1.08, y, 0.2])));
+
+  /* glowing interior */
+  vault.add(mk(new THREE.CylinderGeometry(1.0, 1.0, 0.36, 72, 1, true), inner, [0, 0, -0.02], RX));
+  const gc = document.createElement('canvas'); gc.width = gc.height = 256;
+  const gx = gc.getContext('2d'), gg = gx.createRadialGradient(128, 128, 4, 128, 128, 128);
+  gg.addColorStop(0, '#fff3cf'); gg.addColorStop(0.35, '#f0c766'); gg.addColorStop(0.72, '#7a3a1c'); gg.addColorStop(1, '#1a0508');
+  gx.fillStyle = gg; gx.fillRect(0, 0, 256, 256);
+  const gt = new THREE.CanvasTexture(gc); gt.colorSpace = THREE.SRGBColorSpace;
+  const backMat = new THREE.MeshBasicMaterial({ map: gt, toneMapped: false });
+  vault.add(mk(new THREE.CircleGeometry(1.0, 72), backMat, [0, 0, -0.19]));
+  const inLight = new THREE.PointLight(0xffd27a, 0, 7, 1.6); inLight.position.set(0.3, 0, 0.7); vault.add(inLight);
+
+  /* door on hinge */
+  const hinge = new THREE.Group(); hinge.position.set(-1.0, 0, 0.02); vault.add(hinge);
+  const door = new THREE.Group(); door.position.set(0.98, 0, 0); hinge.add(door);
+  door.add(mk(new THREE.CylinderGeometry(0.97, 0.97, 0.26, 120), gold, [0, 0, 0], RX));
+  door.add(mk(new THREE.CylinderGeometry(0.8, 0.8, 0.02, 120), goldDark, [0, 0, 0.125], RX));
+  door.add(mk(new THREE.TorusGeometry(0.82, 0.03, 20, 120), gold, [0, 0, 0.14]));
+  door.add(mk(new THREE.TorusGeometry(0.55, 0.022, 20, 120), gold, [0, 0, 0.14]));
+  const bh = new THREE.CylinderGeometry(0.038, 0.038, 0.04, 16);
+  for (let i = 0; i < 12; i++) { const a = i / 12 * Math.PI * 2 + 0.26; door.add(mk(bh, gold, [Math.cos(a) * 0.9, Math.sin(a) * 0.9, 0.15], RX)); }
+  door.add(mk(new THREE.CylinderGeometry(0.17, 0.2, 0.14, 48), gold, [0, 0, 0.19], RX));
+  const dial = new THREE.Group(); dial.position.set(0, 0.66, 0.16); door.add(dial);
+  dial.add(mk(new THREE.CylinderGeometry(0.11, 0.12, 0.06, 40), gold, [0, 0, 0], RX));
+  dial.add(mk(new THREE.TorusGeometry(0.12, 0.012, 10, 40), goldDark, [0, 0, 0.03]));
+  dial.add(mk(new THREE.BoxGeometry(0.018, 0.07, 0.02), cherry, [0, 0.06, 0.04]));
+  const wheel = new THREE.Group(); wheel.position.z = 0.29; door.add(wheel);
+  const spoke = new THREE.CylinderGeometry(0.03, 0.03, 0.96, 20), knob = new THREE.SphereGeometry(0.065, 24, 16);
+  for (let i = 0; i < 3; i++) { const a = i / 3 * Math.PI; wheel.add(mk(spoke, gold, [0, 0, 0], [0, 0, a]));
+    [-1, 1].forEach((d) => wheel.add(mk(knob, gold, [-Math.sin(a) * 0.48 * d, Math.cos(a) * 0.48 * d, 0]))); }
+  wheel.add(mk(new THREE.TorusGeometry(0.42, 0.022, 16, 96), gold));
+  wheel.add(mk(new THREE.CylinderGeometry(0.09, 0.09, 0.08, 32), goldDark, [0, 0, 0], RX));
+  const bolts = [], bg = new THREE.CylinderGeometry(0.05, 0.05, 0.26, 20);
+  [-70, -35, 0, 35, 70].forEach((deg) => { const a = deg * Math.PI / 180, b = mk(bg, gold, [0, 0, 0], [0, 0, a - Math.PI / 2]); b.userData.a = a; door.add(b); bolts.push(b); });
+
+  /* website screens that fly out */
+  const SITES = [
+    { url: 'suvarnajewels.in', brand: 'Suvarna', head: ['Gold that', 'tells stories'], cta: 'View collection', c1: '#E2B04A', c2: '#6B4300' },
+    { url: 'auradental.in', brand: 'Aura Dental', head: ['Smile,', 'redesigned'], cta: 'Book a visit', c1: '#19D3C5', c2: '#0B5F59' },
+    { url: 'ironpeak.fit', brand: 'IronPeak', head: ['Train like', 'you mean it'], cta: 'Free trial', c1: '#FF7A1A', c2: '#7A2A00' },
+    { url: 'velvetstudio.in', brand: 'Velvet Studio', head: ['Your hour', 'of calm'], cta: 'Book now', c1: '#F28FC4', c2: '#6B1F4A' }
+  ];
+  const rr = (c, x, y, w, h, r) => { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); };
+  function drawSite(cnv, s) {
+    const c = cnv.getContext('2d'), W = cnv.width, H = cnv.height;
+    c.fillStyle = '#12070B'; c.fillRect(0, 0, W, H);
+    let g = c.createRadialGradient(W * .78, H * .42, 10, W * .78, H * .42, W * .46); g.addColorStop(0, s.c1 + '66'); g.addColorStop(1, 'rgba(18,7,11,0)'); c.fillStyle = g; c.fillRect(0, 0, W, H);
+    c.fillStyle = '#24101A'; c.fillRect(0, 0, W, 46);
+    ['#FF5F57', '#FEBC2E', '#28C840'].forEach((col, i) => { c.fillStyle = col; c.beginPath(); c.arc(26 + i * 20, 23, 7, 0, 7); c.fill(); });
+    c.fillStyle = '#12070B'; rr(c, 96, 11, 250, 24, 12); c.fill();
+    c.fillStyle = '#8a6f78'; c.font = '600 14px "Plus Jakarta Sans", sans-serif'; c.textBaseline = 'middle'; c.fillText(s.url, 112, 23);
+    c.fillStyle = '#fff'; c.font = '700 20px Unbounded, sans-serif'; c.fillText(s.brand, 38, 86);
+    c.font = '800 50px Unbounded, sans-serif'; c.textBaseline = 'alphabetic'; c.fillText(s.head[0], 38, 190); c.fillText(s.head[1], 38, 250);
+    c.fillStyle = 'rgba(255,255,255,.16)'; rr(c, 38, 278, 300, 10, 5); c.fill(); rr(c, 38, 298, 220, 10, 5); c.fill();
+    c.fillStyle = s.c1; rr(c, 38, 330, 190, 48, 24); c.fill();
+    c.fillStyle = '#12070B'; c.font = '800 17px "Plus Jakarta Sans", sans-serif'; c.textBaseline = 'middle'; c.textAlign = 'center'; c.fillText(s.cta, 133, 355); c.textAlign = 'left';
+    const ox = W * .77, oy = H * .44, R = 118;
+    g = c.createRadialGradient(ox - R * .35, oy - R * .4, 5, ox, oy, R); g.addColorStop(0, '#fff'); g.addColorStop(.22, s.c1); g.addColorStop(.68, s.c2); g.addColorStop(1, '#050203');
+    c.fillStyle = g; c.beginPath(); c.arc(ox, oy, R, 0, 7); c.fill();
+    for (let i = 0; i < 3; i++) { c.fillStyle = 'rgba(255,255,255,.06)'; rr(c, 38 + i * 252, 410, 230, 84, 14); c.fill(); c.fillStyle = s.c1; rr(c, 54 + i * 252, 428, 26, 26, 8); c.fill(); }
+  }
+  const roundedShape = (w, h, r) => { const s = new THREE.Shape(), x = -w / 2, y = -h / 2;
+    s.moveTo(x + r, y); s.lineTo(x + w - r, y); s.quadraticCurveTo(x + w, y, x + w, y + r); s.lineTo(x + w, y + h - r); s.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    s.lineTo(x + r, y + h); s.quadraticCurveTo(x, y + h, x, y + h - r); s.lineTo(x, y + r); s.quadraticCurveTo(x, y, x + r, y); return s; };
+  const CW = 0.92, CH = 0.575;
+  const faceGeo = new THREE.ShapeGeometry(roundedShape(CW, CH, 0.035), 8);
+  { const p = faceGeo.attributes.position, uv = new Float32Array(p.count * 2);
+    for (let i = 0; i < p.count; i++) { uv[i * 2] = p.getX(i) / CW + .5; uv[i * 2 + 1] = p.getY(i) / CH + .5; } faceGeo.setAttribute('uv', new THREE.BufferAttribute(uv, 2)); }
+  const rimGeo = new THREE.ShapeGeometry(roundedShape(CW + 0.035, CH + 0.035, 0.05), 8);
+  const TG = [
+    { p: [1.22, 0.8, 0.55], r: [-0.06, -0.35, 0.06] }, { p: [1.88, 0.1, 0.8], r: [0.03, -0.45, -0.03] },
+    { p: [1.3, -0.66, 0.7], r: [0.08, -0.32, 0.05] }, { p: [0.62, -0.06, 1.08], r: [0, -0.2, -0.04] }
+  ];
+  const texes = [];
+  const cards = SITES.map((s, i) => {
+    const cnv = document.createElement('canvas'); cnv.width = 800; cnv.height = 500; drawSite(cnv, s);
+    const tex = new THREE.CanvasTexture(cnv); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+    texes.push({ cnv, tex, s });
+    const g = new THREE.Group();
+    const back = new THREE.Mesh(rimGeo, gold); back.position.z = -0.006; g.add(back);
+    g.add(new THREE.Mesh(faceGeo, new THREE.MeshBasicMaterial({ map: tex, toneMapped: false })));
+    g.userData = { i, tg: TG[i] }; g.visible = false; vault.add(g); return g;
+  });
+  if (document.fonts && document.fonts.load) Promise.all([document.fonts.load('800 50px Unbounded'), document.fonts.load('600 14px "Plus Jakarta Sans"')])
+    .then(() => texes.forEach((o) => { drawSite(o.cnv, o.s); o.tex.needsUpdate = true; })).catch(() => {});
+
+  /* sizing */
+  let fit = 1, shiftX = 0;
+  function resize() {
+    const w = cv.clientWidth || 400, h = cv.clientHeight || 400, bw = box.clientWidth || w;
+    renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
+    const halfH = Math.tan(15 * Math.PI / 180) * 10, halfW = halfH * camera.aspect;
+    /* the canvas extends further left than the box (room for the open door), so re-centre on the box */
+    const boxCenter = (box.getBoundingClientRect().left + bw / 2) - (cv.getBoundingClientRect().left + w / 2);
+    shiftX = (boxCenter / w) * 2 * halfW;
+    fit = Math.min(2 * (halfW * bw / w) / 4.4, 2 * halfH / 3.1);
+  }
+  resize();
+  if ('ResizeObserver' in window) new ResizeObserver(resize).observe(box); else addEventListener('resize', resize);
+
+  /* pointer + visibility */
+  let mx = 0, my = 0, smx = 0, smy = 0, visible = true;
+  if (fine && !reduce) hero.addEventListener('pointermove', (e) => { const r = hero.getBoundingClientRect(); mx = (e.clientX - r.left) / r.width - .5; my = (e.clientY - r.top) / r.height - .5; });
+  if (fine && !reduce) hero.addEventListener('pointerleave', () => { mx = 0; my = 0; });
+  if ('IntersectionObserver' in window) new IntersectionObserver((es) => { visible = es[0].isIntersecting; }).observe(box);
+
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v)), smooth = (t) => t * t * (3 - 2 * t), lerp = (a, b, t) => a + (b - a) * t, D = Math.PI / 180;
+  const clock = new THREE.Clock(); let shown = false;
+
+  (function loop() {
+    requestAnimationFrame(loop);
+    if (!visible || document.hidden) { clock.getDelta(); return; }
+    const dt = Math.min(clock.getDelta(), .05), t = clock.elapsedTime;
+    smx += (mx - smx) * .06; smy += (my - smy) * .06;
+    const hr = hero.getBoundingClientRect(), p = clamp(-hr.top / (hr.height || 1), 0, 1);
+
+    /* intro: unlock → open (plays once on load), scroll opens it a touch more */
+    const u = reduce ? 1 : smooth(clamp((t - 0.5) / 1.3, 0, 1));
+    const o = reduce ? 0.92 : smooth(clamp((t - 1.7) / 1.7, 0, 1)) * 0.88 + p * 0.1;
+
+    group.position.set(shiftX + lerp(0, -0.3, o) * fit,(reduce ? 0 : Math.sin(t * 1.2) * 0.05) + p * 0.35, 0);
+    group.scale.setScalar(fit * (1 - p * 0.1));
+    group.rotation.set((6 - smy * 10 + p * 12) * D, (-16 + smx * 18 + p * -18 + (reduce ? 0 : Math.sin(t * .4) * 3)) * D, (reduce ? 0 : Math.sin(t * .7) * 1.2) * D, 'YXZ');
+
+    wheel.rotation.z = -u * Math.PI * 2.5 + (reduce ? 0 : Math.sin(t * .6) * .03);
+    dial.rotation.z = u * Math.PI * 6;
+    bolts.forEach((b) => { const r = 0.97 + 0.1 - u * 0.15; b.position.set(Math.cos(b.userData.a) * r, Math.sin(b.userData.a) * r, 0); });
+    const os = clamp(o, 0, 1);
+    hinge.rotation.y = -os * 1.95;
+    backMat.color.setScalar(0.12 + os * 0.95);
+    inLight.intensity = os * 9;
+    key.position.set(Math.cos(t * .35) * 5, 5, 5 + Math.sin(t * .35) * 2);
+
+    cards.forEach((c) => {
+      const d = c.userData, e = smooth(clamp((os - 0.3 - d.i * 0.1) / 0.45, 0, 1));
+      c.visible = e > 0.001; if (!c.visible) return;
+      const fl = reduce ? 0 : Math.sin(t * 1.3 + d.i * 1.7) * 0.04;
+      c.position.set(lerp(0.05 * d.i, d.tg.p[0], e), lerp(0, d.tg.p[1], e) + fl * e, lerp(-0.12, d.tg.p[2], e));
+      c.rotation.set(d.tg.r[0] * e + (reduce ? 0 : Math.sin(t * .9 + d.i) * .03), d.tg.r[1] * e, d.tg.r[2] * e);
+      c.scale.setScalar(0.2 + 0.8 * e);
+    });
+
+    renderer.render(scene, camera);
+    if (!shown) { shown = true; box.classList.add('has3d'); }
+  })();
+}
+</script>
